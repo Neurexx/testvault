@@ -1,8 +1,4 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/8PMiZFW70wf
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
+
 import Link from "next/link"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
@@ -12,7 +8,7 @@ import Image from "next/image"
 export default function Component() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
+      <header className="px-4 lg:px-6 h-14 flex items-center justify-center">
       
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link href="/signup" className="text-sm  font-medium hover:underline underline-offset-4" prefetch={false}>
@@ -70,154 +66,156 @@ export default function Component() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Unlock Your Exam Potential</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  TestVault provides you with the tools you need to excel in your college exams. Access a vast library
-                  of past exam papers and practice online tests to boost your confidence and performance.
-                </p>
-              </div>
+        <section className="w-full flex flex-col items-center justify-center py-12 sm:py-16 md:py-24 lg:py-32 bg-muted">
+  <div className="container px-4 sm:px-6">
+    <div className="flex flex-col items-center justify-center space-y-4 text-center">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl">
+          Unlock Your Exam Potential
+        </h2>
+        <p className="max-w-[900px] text-muted-foreground text-base sm:text-lg md:text-xl/relaxed">
+          TestVault provides you with the tools you need to excel in your college exams. Access a vast library of past
+          exam papers and practice online tests to boost your confidence and performance.
+        </p>
+      </div>
+    </div>
+    <div className="mx-auto grid max-w-full items-center gap-6 py-8 sm:py-10 md:py-12 lg:py-12 lg:grid-cols-2 lg:gap-12">
+      <div className="flex flex-col items-center justify-center space-y-4">
+        <ul className="grid gap-6 w-full">
+          <li>
+            <div className="flex flex-col flex-wrap">
+              <h3 className="text-lg sm:text-xl font-bold">Exam Papers</h3>
+              <p className="text-muted-foreground text-sm sm:text-base">
+                Access a comprehensive library of past college exam papers to practice and prepare.
+              </p>
             </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-              <div className="flex flex-col justify-center space-y-4">
-                <ul className="grid gap-6">
-                  <li>
-                    <div className="grid gap-1">
-                      <h3 className="text-xl font-bold">Exam Papers</h3>
-                      <p className="text-muted-foreground">
-                        Access a comprehensive library of past college exam papers to practice and prepare.
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="grid gap-1">
-                      <h3 className="text-xl font-bold">Online Exams</h3>
-                      <p className="text-muted-foreground">
-                        Take practice tests online to simulate the real exam experience and identify areas for
-                        improvement.
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <img
-                src="/placeholder.svg"
-                width="550"
-                height="310"
-                alt="Features"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
-              />
+          </li>
+          <li>
+            <div className="grid gap-1">
+              <h3 className="text-lg sm:text-xl font-bold">Online Exams</h3>
+              <p className="text-muted-foreground text-sm sm:text-base">
+                Take practice tests online to simulate the real exam experience and identify areas for improvement.
+              </p>
             </div>
-          </div>
-        </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Testimonials</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Hear from students who have used TestVault to ace their exams.
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="rounded-lg bg-card p-6 shadow-sm">
-                  <div className="flex items-center space-x-4">
-                    <Avatar>
-                      <AvatarImage src="/placeholder-user.jpg" alt="@username" />
-                      <AvatarFallback>JD</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium">John Doe</p>
-                      <p className="text-sm text-muted-foreground">Computer Science Student</p>
-                    </div>
-                  </div>
-                  <p className="mt-4 text-muted-foreground">
-                    &quot TestVault has been a game-changer for me. The access to\n past exam papers and the online practice
-                    tests have\n significantly improved my exam performance. &quot
-                  </p>
-                </div>
-                <div className="rounded-lg bg-card p-6 shadow-sm">
-                  <div className="flex items-center space-x-4">
-                    <Avatar>
-                      <AvatarImage src="/placeholder-user.jpg" alt="@username" />
-                      <AvatarFallback>SA</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium">Sarah Anderson</p>
-                      <p className="text-sm text-muted-foreground">Business Administration Student</p>
-                    </div>
-                  </div>
-                  <p className="mt-4 text-muted-foreground">
-                  &quot I highly recommend TestVault to any student looking to\n improve their exam scores. The platform is
-                    user-friendly\n and the content is top-notch. &quot
-                  </p>
-                </div>
-              </div>
-              <img
-                src="/placeholder.svg"
-                width="550"
-                height="310"
-                alt="Testimonials"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
-              />
+          </li>
+        </ul>
+      </div>
+      <img
+        src="/placeholder.svg"
+        alt="Features"
+        className="w-full mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center lg:w-[550px]"
+      />
+    </div>
+  </div>
+</section>
+
+
+<section className="w-full flex flex-col items-center justify-center py-12 sm:py-16 md:py-24 lg:py-32">
+  <div className="px-4 sm:px-6">
+    <div className="flex flex-col items-center justify-center space-y-4 text-center">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl">
+          Testimonials
+        </h2>
+        <p className="max-w-[900px] text-muted-foreground text-base sm:text-lg md:text-xl/relaxed">
+          Hear from students who have used TestVault to ace their exams.
+        </p>
+      </div>
+    </div>
+    <div className="mx-auto grid max-w-full lg:max-w-5xl items-center gap-6 py-8 sm:py-10 md:py-12 lg:py-12 lg:grid-cols-2 lg:gap-12">
+      <div className="flex flex-col justify-center space-y-4 w-full">
+        <div className="rounded-lg bg-card p-6 shadow-sm">
+          <div className="flex items-center space-x-4">
+            <Avatar>
+              <AvatarImage src="/placeholder-user.jpg" alt="@username" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium">John Doe</p>
+              <p className="text-sm text-muted-foreground">Computer Science Student</p>
             </div>
           </div>
-        </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Experience Online Exams</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  TestVault&aposs online exam feature provides a realistic simulation of the real exam experience, helping
-                  you identify and address your weaknesses.
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-              <img
-                src="/placeholder.svg"
-                width="550"
-                height="310"
-                alt="Online Exams"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full lg:order-last"
-              />
-              <div className="flex flex-col justify-center space-y-4">
-                <ul className="grid gap-6">
-                  <li>
-                    <div className="grid gap-1">
-                      <h3 className="text-xl font-bold">Timed Exams</h3>
-                      <p className="text-muted-foreground">
-                        Take practice tests under timed conditions to simulate the real exam experience.
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="grid gap-1">
-                      <h3 className="text-xl font-bold">Detailed Feedback</h3>
-                      <p className="text-muted-foreground">
-                        Receive comprehensive feedback on your performance, including areas for improvement.
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="grid gap-1">
-                      <h3 className="text-xl font-bold">Adaptive Difficulty</h3>
-                      <p className="text-muted-foreground">
-                        The online exams adjust in difficulty to challenge you and help you grow.
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
+          <p className="mt-4 text-muted-foreground">
+            &quot;TestVault has been a game-changer for me. The access to past exam papers and the online practice tests have significantly improved my exam performance.&quot;
+          </p>
+        </div>
+        <div className="rounded-lg bg-card p-6 shadow-sm">
+          <div className="flex items-center space-x-4">
+            <Avatar>
+              <AvatarImage src="/placeholder-user.jpg" alt="@username" />
+              <AvatarFallback>SA</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium">Sarah Anderson</p>
+              <p className="text-sm text-muted-foreground">Business Administration Student</p>
             </div>
           </div>
-        </section>
+          <p className="mt-4 text-muted-foreground">
+            &quot;I highly recommend TestVault to any student looking to improve their exam scores. The platform is user-friendly and the content is top-notch.&quot;
+          </p>
+        </div>
+      </div>
+      <img
+        src="/placeholder.svg"
+        alt="Testimonials"
+        className="w-full mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center lg:w-[550px]"
+      />
+    </div>
+  </div>
+</section>
+
+<section className="w-full py-12 sm:py-16 md:py-24 lg:py-32">
+  <div className="container px-4 sm:px-6">
+    <div className="flex flex-col items-center justify-center space-y-4 text-center">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl">
+          Experience Online Exams
+        </h2>
+        <p className="max-w-[900px] text-muted-foreground text-base sm:text-lg md:text-xl/relaxed">
+          TestVault&aposs online exam feature provides a realistic simulation of the real exam experience, helping you identify and address your weaknesses.
+        </p>
+      </div>
+    </div>
+    <div className="mx-auto grid max-w-full lg:max-w-5xl items-center gap-6 py-8 sm:py-10 md:py-12 lg:py-12 lg:grid-cols-2 lg:gap-12">
+      <Image
+        src="/placeholder.svg"
+        width={550}
+        height={310}
+        alt="Online Exams"
+        className="w-full mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center lg:w-[550px] lg:order-last"
+      />
+      <div className="flex flex-col justify-center space-y-4 w-full">
+        <ul className="grid gap-6">
+          <li>
+            <div className="grid gap-1">
+              <h3 className="text-lg sm:text-xl font-bold">Timed Exams</h3>
+              <p className="text-muted-foreground text-sm sm:text-base">
+                Take practice tests under timed conditions to simulate the real exam experience.
+              </p>
+            </div>
+          </li>
+          <li>
+            <div className="grid gap-1">
+              <h3 className="text-lg sm:text-xl font-bold">Detailed Feedback</h3>
+              <p className="text-muted-foreground text-sm sm:text-base">
+                Receive comprehensive feedback on your performance, including areas for improvement.
+              </p>
+            </div>
+          </li>
+          <li>
+            <div className="grid gap-1">
+              <h3 className="text-lg sm:text-xl font-bold">Adaptive Difficulty</h3>
+              <p className="text-muted-foreground text-sm sm:text-base">
+                The online exams adjust in difficulty to challenge you and help you grow.
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
         <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
             <div className="space-y-3">
