@@ -3,110 +3,117 @@
  * @see https://v0.dev/t/6OvpedbREib
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import { Input } from "@/components/ui/input"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
+import { useState, useMemo } from "react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function Component() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedSubject, setSelectedSubject] = useState("")
-  const [selectedYear, setSelectedYear] = useState("")
-  const [selectedDifficulty, setSelectedDifficulty] = useState("")
-  const [sortBy, setSortBy] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState("");
+  const [sortBy, setSortBy] = useState("");
+
   const examPapers = [
     {
       id: 1,
       subject: "Data Structures",
       year: 2022,
       difficulty: "Intermediate",
-      previewImage: "https://www.simplilearn.com/ice9/free_resources_article_thumb/Graph%20Data%20Structure%20-%20Soni/what-is-graphs-in-data-structure.png",
+      previewImage:
+        "https://www.simplilearn.com/ice9/free_resources_article_thumb/Graph%20Data%20Structure%20-%20Soni/what-is-graphs-in-data-structure.png",
     },
     {
       id: 2,
       subject: "Physics",
       year: 2021,
       difficulty: "Advanced",
-      previewImage: "https://t3.ftcdn.net/jpg/01/97/49/40/360_F_197494079_U9dM6IxEBzdUmrhe3DFxyi8L0aFGtQME.jpg",
+      previewImage:
+        "https://t3.ftcdn.net/jpg/01/97/49/40/360_F_197494079_U9dM6IxEBzdUmrhe3DFxyi8L0aFGtQME.jpg",
     },
     {
       id: 3,
       subject: "Chemistry",
       year: 2023,
       difficulty: "Beginner",
-      previewImage: "https://www.thoughtco.com/thmb/6MsMmUK27akFhb8i89kj95J5iko=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-545286316-433dd345105e4c6ebe4cdd8d2317fdaa.jpg",
+      previewImage:
+        "https://www.thoughtco.com/thmb/6MsMmUK27akFhb8i89kj95J5iko=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-545286316-433dd345105e4c6ebe4cdd8d2317fdaa.jpg",
     },
     {
       id: 4,
       subject: "Mathematics",
       year: 2020,
       difficulty: "Intermediate",
-      previewImage: "https://www.euroschoolindia.com/wp-content/uploads/2023/10/what-is-vedic-mathss-for-kids-jpg.webp",
+      previewImage:
+        "https://www.euroschoolindia.com/wp-content/uploads/2023/10/what-is-vedic-mathss-for-kids-jpg.webp",
     },
     {
       id: 5,
       subject: "Digital Circuit Design",
       year: 2022,
       difficulty: "Advanced",
-      previewImage: "https://www.watelectronics.com/wp-content/uploads/digital-circuit.png",
+      previewImage:
+        "https://www.watelectronics.com/wp-content/uploads/digital-circuit.png",
     },
     {
       id: 6,
       subject: "English",
       year: 2021,
       difficulty: "Beginner",
-      previewImage: "https://neucodetalent.com/wp-content/uploads/2021/06/business-english.jpg",
+      previewImage:
+        "https://neucodetalent.com/wp-content/uploads/2021/06/business-english.jpg",
     },
-  ]
+  ];
+
   const filteredExamPapers = useMemo(() => {
     return examPapers
       .filter((paper) => {
-        if (searchTerm && !paper.subject.toLowerCase().includes(searchTerm.toLowerCase())) {
-          return false
+        if (
+          searchTerm &&
+          !paper.subject.toLowerCase().includes(searchTerm.toLowerCase())
+        ) {
+          return false;
         }
-        if (selectedSubject && paper.subject !== selectedSubject) {
-          return false
+        if (selectedSubject && selectedSubject !== "All Subjects" && paper.subject !== selectedSubject) {
+          return false;
         }
-        if (selectedYear && paper.year !== Number(selectedYear)) {
-          return false
+        if (selectedYear && selectedYear !== "All Years" && paper.year !== Number(selectedYear)) {
+          return false;
         }
-        if (selectedDifficulty && paper.difficulty !== selectedDifficulty) {
-          return false
+        if (selectedDifficulty && selectedDifficulty !== "All Difficulties" && paper.difficulty !== selectedDifficulty) {
+          return false;
         }
-        return true
+        return true;
       })
       .sort((a, b) => {
         switch (sortBy) {
           case "subject":
-            return a.subject.localeCompare(b.subject)
+            return a.subject.localeCompare(b.subject);
           case "year":
-            return a.year - b.year
+            return a.year - b.year;
           case "difficulty":
-            return a.difficulty.localeCompare(b.difficulty)
+            return a.difficulty.localeCompare(b.difficulty);
           default:
-            return 0
+            return 0;
         }
-      })
-  }, [searchTerm, selectedSubject, selectedYear, selectedDifficulty, sortBy])
+      });
+  }, [searchTerm, selectedSubject, selectedYear, selectedDifficulty, sortBy]);
+
   const handleSearch = (e:any) => {
-    setSearchTerm(e.target.value)
-  }
-  const handleSubjectChange = (e:any) => {
-    setSelectedSubject(e.target.value)
-  }
-  const handleYearChange = (e:any) => {
-    setSelectedYear(e.target.value)
-  }
-  const handleDifficultyChange = (e:any) => {
-    setSelectedDifficulty(e.target.value)
-  }
-  const handleSortChange = (e:any) => {
-    setSortBy(e.target.value)
-  }
+    setSearchTerm(e.target.value);
+  };
+
   return (
-    <div className="container mx-auto px-4 md:px-6 py-8">
+    <div className="container mx-auto px-4 sm:px-6 py-8">
       <h1 className="text-3xl font-bold mb-6">Previous Exam Papers</h1>
       <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
         <div className="flex-1">
@@ -118,8 +125,8 @@ export default function Component() {
             className="w-full"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <Select value={selectedSubject} onValueChange={handleSubjectChange}>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Select value={selectedSubject} onValueChange={setSelectedSubject}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Select subject" />
             </SelectTrigger>
@@ -132,7 +139,7 @@ export default function Component() {
               <SelectItem value="English">English</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={selectedYear} onValueChange={handleYearChange}>
+          <Select value={selectedYear} onValueChange={setSelectedYear}>
             <SelectTrigger className="w-32">
               <SelectValue placeholder="Select year" />
             </SelectTrigger>
@@ -144,7 +151,7 @@ export default function Component() {
               <SelectItem value={"2020"}>2020</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={selectedDifficulty} onValueChange={handleDifficultyChange}>
+          <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Select difficulty" />
             </SelectTrigger>
@@ -155,7 +162,7 @@ export default function Component() {
               <SelectItem value="Advanced">Advanced</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={sortBy} onValueChange={handleSortChange}>
+          <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-32">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
@@ -177,8 +184,6 @@ export default function Component() {
             <img
               src={paper.previewImage}
               alt={`${paper.subject} exam paper`}
-              width={300}
-              height={200}
               className="w-full h-48 object-cover"
               style={{ aspectRatio: "300/200", objectFit: "cover" }}
             />
@@ -196,5 +201,5 @@ export default function Component() {
         ))}
       </div>
     </div>
-  )
+  );
 }
