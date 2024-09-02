@@ -17,8 +17,8 @@ export default function Component() {
           <Link href="/login" className="text-sm  font-medium hover:underline underline-offset-4" prefetch={false}>
             Login
           </Link>
-          <Link href="#" className="text-sm   font-medium hover:underline underline-offset-4" prefetch={false}>
-            About
+          <Link href="/papers" className="text-sm   font-medium hover:underline underline-offset-4" prefetch={false}>
+            Papers
           </Link>
           <Link href="#" className="text-sm   font-medium hover:underline underline-offset-4" prefetch={false}>
             Contact
@@ -101,7 +101,7 @@ export default function Component() {
         </ul>
       </div>
       <img
-        src="/placeholder.svg"
+        src="https://blogimages.softwaresuggest.com/blog/wp-content/uploads/2022/06/29130201/10-Online-Examination-Software-Features-That-Make-Online-Exams-A-Breeze-01-1024x555.png"
         alt="Features"
         className="w-full mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center lg:w-[550px]"
       />
@@ -156,7 +156,7 @@ export default function Component() {
         </div>
       </div>
       <img
-        src="/placeholder.svg"
+        src="https://media.gettyimages.com/id/1333231964/video/university-student-friends-working-on-laptop-and-books-sitting-on-the-steps-in-the-campus.jpg?s=640x640&k=20&c=zL022zfJWQ_4b6j_rG7igoUQPBXeI7hBpuMkDvM2p38="
         alt="Testimonials"
         className="w-full mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center lg:w-[550px]"
       />
@@ -177,10 +177,10 @@ export default function Component() {
       </div>
     </div>
     <div className="mx-auto grid max-w-full lg:max-w-5xl items-center gap-6 py-8 sm:py-10 md:py-12 lg:py-12 lg:grid-cols-2 lg:gap-12">
-      <Image
-        src="/placeholder.svg"
-        width={550}
-        height={310}
+      <img
+        src="https://cdn.edclass.com/wp-content/uploads/online-exams.jpg"
+        width="550"
+        height="310"
         alt="Online Exams"
         className="w-full mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center lg:w-[550px] lg:order-last"
       />
