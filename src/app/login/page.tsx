@@ -20,7 +20,9 @@ export default function Signup() {
       e.preventDefault()
       const result = await signIn('credentials', {
         redirect: false,
+        //@ts-ignore
         identifier: userData.email,
+        //@ts-ignore
         password: userData.password,
       });
   

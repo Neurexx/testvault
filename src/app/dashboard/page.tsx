@@ -360,7 +360,7 @@ export default function Component() {
   )
 }
 
-function AnvilIcon(props) {
+function AnvilIcon(props:any) {
   return (
     <svg
       {...props}
@@ -384,7 +384,7 @@ function AnvilIcon(props) {
 }
 
 
-function BarChartIcon(props) {
+function BarChartIcon(props:any) {
   return (
     <svg
       {...props}
@@ -406,7 +406,7 @@ function BarChartIcon(props) {
 }
 
 
-function BookIcon(props) {
+function BookIcon(props:any) {
   return (
     <svg
       {...props}
@@ -426,7 +426,7 @@ function BookIcon(props) {
 }
 
 
-function CalendarIcon(props) {
+function CalendarIcon(props:any) {
   return (
     <svg
       {...props}
@@ -449,7 +449,7 @@ function CalendarIcon(props) {
 }
 
 
-function CheckIcon(props) {
+function CheckIcon(props:any) {
   return (
     <svg
       {...props}
@@ -469,7 +469,7 @@ function CheckIcon(props) {
 }
 
 
-function DownloadIcon(props) {
+function DownloadIcon(props:any) {
   return (
     <svg
       {...props}
@@ -491,7 +491,7 @@ function DownloadIcon(props) {
 }
 
 
-function MenuIcon(props) {
+function MenuIcon(props:any) {
   return (
     <svg
       {...props}
@@ -513,7 +513,7 @@ function MenuIcon(props) {
 }
 
 
-function SearchIcon(props) {
+function SearchIcon(props:any) {
   return (
     <svg
       {...props}
@@ -534,7 +534,7 @@ function SearchIcon(props) {
 }
 
 
-function SettingsIcon(props) {
+function SettingsIcon(props:any) {
   return (
     <svg
       {...props}
