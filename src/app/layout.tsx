@@ -3,6 +3,7 @@
 import { Manrope } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import './globals.css'
+import AuthProvider from '@/context/AuthProvider'
 
 const fontHeading = Manrope({
   subsets: ['latin'],
@@ -26,7 +27,8 @@ export default function Layout({ children }) {
           fontBody.variable
         )}
       >
-        {children}
+        <AuthProvider>{children}</AuthProvider>
+        
       </body>
     </html>
   )
