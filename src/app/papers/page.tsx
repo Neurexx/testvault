@@ -4,7 +4,7 @@
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 "use client";
-
+import axios from "axios";
 import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import {
@@ -112,6 +112,30 @@ export default function Component() {
     setSearchTerm(e.target.value);
   };
 
+  const handleDownload = async () => {
+    try {
+      // Make a GET request to fetch the file from the S3 URL
+      const response = await axios.get("https://testvault-bucket.s3.amazonaws.com/HITK/MATH/MTH1201/2022.pdf", {
+        responseType: 'blob',  // Important to receive the data as a blob
+      });
+      
+      // Create a link element to download the file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'file.pdf'); // Replace 'file.pdf' with the desired file name
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup after the download
+      //@ts-ignore
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Error downloading the PDF:', error);
+    }
+  };
   return (
     <div className="container mx-auto px-4 sm:px-6 py-8">
       <h1 className="text-3xl font-bold mb-6">Previous Exam Papers</h1>
@@ -193,7 +217,7 @@ export default function Component() {
                 <span className="text-sm text-muted-foreground">Year: {paper.year}</span>
                 <span className="text-sm text-muted-foreground">Difficulty: {paper.difficulty}</span>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleDownload}>
                 View Exam Paper
               </Button>
             </div>

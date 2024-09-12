@@ -15,9 +15,18 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function Component() {
   const {data:session,status}=useSession()
+ const a="adfd"
+ 
+  const router=useRouter()
+  useEffect(()=>{
+    if(!session?.user)
+      router.push("/login")
+  },[])
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -176,7 +185,7 @@ export default function Component() {
                   src="/placeholder.svg"
                   width={36}
                   height={36}
-                  alt="Avatar"
+                  alt={"X"}
                   className="overflow-hidden rounded-full"
                   style={{ aspectRatio: "36/36", objectFit: "cover" }}
                 />
@@ -193,32 +202,33 @@ export default function Component() {
           </DropdownMenu>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
-            <Card className="sm:col-span-2">
-              <CardHeader className="pb-3">
-                <CardTitle>Exam Papers</CardTitle>
-                <CardDescription className="max-w-lg text-balance leading-relaxed">
-                  Access past exam papers from your courses.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Tabs defaultValue="all">
-                  <div className="flex items-center">
-                    <TabsList>
-                      <TabsTrigger value="all">All</TabsTrigger>
-                      <TabsTrigger value="computer-science">Computer Science</TabsTrigger>
-                      <TabsTrigger value="mathematics">Mathematics</TabsTrigger>
-                      <TabsTrigger value="physics">Physics</TabsTrigger>
-                    </TabsList>
-                    <div className="ml-auto flex items-center gap-2">
-                      <Input
-                        type="search"
-                        placeholder="Search exam papers..."
-                        className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-                      />
-                    </div>
+        <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
+          <Card className="sm:col-span-2 sm:mx-0 mx-auto">
+            <CardHeader className="pb-3">
+              <CardTitle>Exam Papers</CardTitle>
+              <CardDescription className="max-w-lg text-balance leading-relaxed">
+                Access past exam papers from your courses.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="all">
+                <div className="flex flex-col  sm:flex-row items-center">
+                  <TabsList className="w-full sm:w-auto">
+                    <TabsTrigger value="all">All</TabsTrigger>
+                    <TabsTrigger value="computer-science">Computer Science</TabsTrigger>
+                    <TabsTrigger value="mathematics">Mathematics</TabsTrigger>
+                    {/* <TabsTrigger value="physics">Physics</TabsTrigger> */}
+                  </TabsList>
+                  <div className="mt-4 sm:mt-0 sm:ml-auto flex items-center gap-2 w-full sm:w-auto">
+                    <Input
+                      type="search"
+                      placeholder="Search exam papers..."
+                      className="w-full sm:w-[200px] lg:w-[336px] rounded-lg bg-background pl-8"
+                    />
                   </div>
-                  <TabsContent value="all">
+                </div>
+                <TabsContent value="all">
+                  <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -281,80 +291,82 @@ export default function Component() {
                         </TableRow>
                       </TableBody>
                     </Table>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-            <Card className="sm:col-span-2">
-              <CardHeader className="pb-3">
-                <CardTitle>Online Exams</CardTitle>
-                <CardDescription className="max-w-lg text-balance leading-relaxed">
-                  View your upcoming online exams and their schedules.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle>Introduction to Computer Science</CardTitle>
-                      <CardDescription>Final Exam</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="text-sm text-muted-foreground">Date</div>
-                          <div className="font-medium">May 15, 2023</div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">Time</div>
-                          <div className="font-medium">2:00 PM</div>
-                        </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+          <Card className="sm:col-span-2">
+            <CardHeader className="pb-3">
+              <CardTitle>Online Exams</CardTitle>
+              <CardDescription className="max-w-lg text-balance leading-relaxed">
+                View your upcoming online exams and their schedules.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle>Introduction to Computer Science</CardTitle>
+                    <CardDescription>Final Exam</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-muted-foreground">Date</div>
+                        <div className="font-medium">May 15, 2023</div>
                       </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button>Take Exam</Button>
-                    </CardFooter>
-                  </Card>
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle>Calculus I</CardTitle>
-                      <CardDescription>Midterm Exam</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="text-sm text-muted-foreground">Date</div>
-                          <div className="font-medium">April 20, 2023</div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">Time</div>
-                          <div className="font-medium">10:00 AM</div>
-                        </div>
+                      <div>
+                        <div className="text-sm text-muted-foreground">Time</div>
+                        <div className="font-medium">2:00 PM</div>
                       </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button>Take Exam</Button>
-                    </CardFooter>
-                  </Card>
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle>Mechanics</CardTitle>
-                      <CardDescription>Final Exam</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="text-sm text-muted-foreground">Date</div>
-                          <div className="font-medium">June 5, 2023</div>
-                        </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button>Take Exam</Button>
+                  </CardFooter>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle>Calculus I</CardTitle>
+                    <CardDescription>Midterm Exam</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-muted-foreground">Date</div>
+                        <div className="font-medium">April 20, 2023</div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </main>
+                      <div>
+                        <div className="text-sm text-muted-foreground">Time</div>
+                        <div className="font-medium">10:00 AM</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button>Take Exam</Button>
+                  </CardFooter>
+                </Card>
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle>Mechanics</CardTitle>
+                    <CardDescription>Final Exam</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-muted-foreground">Date</div>
+                        <div className="font-medium">June 5, 2023</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+      
       </div>
     </div>
   )

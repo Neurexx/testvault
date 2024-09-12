@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -20,8 +21,18 @@ export default function Signup() {
       const res=await axios.post("/api/signup",userData)
 
       console.log(res)
-      if(res.status===201)
-        router.push('/dashboard')
+      if(res.status===201){
+
+        await signIn('credentials', {
+          redirect: false,
+          //@ts-ignore
+          identifier: userData.email,
+          //@ts-ignore
+          password: userData.password,
+        });
+        router.push("/dashboard")
+      }
+        
   
     } catch (error) {
       //@ts-ignore
