@@ -5,7 +5,7 @@
  */
 "use client";
 import axios from "axios";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -22,8 +22,35 @@ export default function Component() {
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [examPapers, setExamPapers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const examPapers = [
+  useEffect(() => {
+    const fetchExamPapers = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`/api/papers`, {
+          params: {
+            paperName: searchTerm,
+            
+            
+            
+          },
+        });
+        setExamPapers(response.data);
+        console.log(response.data)
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching papers:", error);
+        setError("Failed to fetch exam papers");
+        setLoading(false);
+      }
+    };
+
+    fetchExamPapers();
+  }, [selectedSubject, selectedYear, selectedDifficulty, searchTerm]);
+
+  /*const examPapers = [
     {
       id: 1,
       subject: "Data Structures",
@@ -72,17 +99,17 @@ export default function Component() {
       previewImage:
         "https://neucodetalent.com/wp-content/uploads/2021/06/business-english.jpg",
     },
-  ];
+  ];*/
 
   const filteredExamPapers = useMemo(() => {
     return examPapers
       .filter((paper) => {
-        if (
+       /* if (
           searchTerm &&
           !paper.subject.toLowerCase().includes(searchTerm.toLowerCase())
         ) {
           return false;
-        }
+        }*/
         if (selectedSubject && selectedSubject !== "All Subjects" && paper.subject !== selectedSubject) {
           return false;
         }
@@ -108,7 +135,7 @@ export default function Component() {
       });
   }, [searchTerm, selectedSubject, selectedYear, selectedDifficulty, sortBy]);
 
-  const handleSearch = (e:any) => {
+  const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
@@ -202,12 +229,12 @@ export default function Component() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredExamPapers.map((paper) => (
           <div
-            key={paper.id}
+            key={paper._id}
             className="bg-background rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
           >
             <img
               src={paper.previewImage}
-              alt={`${paper.subject} exam paper`}
+              alt={`${paper.paperName}`}
               className="w-full h-48 object-cover"
               style={{ aspectRatio: "300/200", objectFit: "cover" }}
             />
@@ -217,8 +244,8 @@ export default function Component() {
                 <span className="text-sm text-muted-foreground">Year: {paper.year}</span>
                 <span className="text-sm text-muted-foreground">Difficulty: {paper.difficulty}</span>
               </div>
-              <Button variant="outline" size="sm" onClick={handleDownload}>
-                View Exam Paper
+              <Button variant="outline" size="sm" >
+                <a href="https://testvault-bucket.s3.amazonaws.com/HITK/MATH/MTH1201/2022.pdf" download={"file.pdf"}>View Exam Paper</a>
               </Button>
             </div>
           </div>
