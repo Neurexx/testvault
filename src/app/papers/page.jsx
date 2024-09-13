@@ -245,7 +245,7 @@ export default function Component() {
                 <span className="text-sm text-muted-foreground">Difficulty: {paper.difficulty}</span>
               </div>
               <Button variant="outline" size="sm" >
-                <a href={`https://testvault-bucket.s3.amazonaws.com/${paper.collegeName}/${paper.department}/${paper.paperCode}/${paper.year}.pdf`} download={"file.pdf"}>View Exam Paper</a>
+                <a href={`https://testvault-bucket.s3.amazonaws.com/${paper.collegeName}/${paper.department}/${paper.paperCode}/${paper.paperCode}-${paper.year}.pdf`} download={`${paper.paperCode}-${paper.year}.pdf`}>View Exam Paper</a>
               </Button>
             </div>
           </div>
