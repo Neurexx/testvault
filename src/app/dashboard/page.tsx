@@ -23,10 +23,20 @@ export default function Component() {
  const a="adfd"
  
   const router=useRouter()
-  useEffect(()=>{
-    if(!session?.user)
-      router.push("/login")
-  },[])
+  useEffect(() => {
+    if (status === 'loading') return; // Wait until session status is known
+    if (!session?.user) {
+      router.push('/login');
+    }
+  }, [session, status, router]);
+
+  if (status === 'loading') {
+    return <p>Loading...</p>; // Optional loading state
+  }
+
+  if (!session?.user) {
+    return null; // Prevent rendering before redirect
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -44,7 +54,7 @@ export default function Component() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/papers"
                   className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                   prefetch={false}
                 >

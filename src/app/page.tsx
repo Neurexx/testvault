@@ -1,12 +1,31 @@
-
+"use client"
 import Link from "next/link"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function Component() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
+  useEffect(() => {
+    if (status === 'loading') return; // Wait for session status to load
+    if (session?.user) {
+      router.push('/dashboard'); // Redirect to dashboard if session exists
+    }
+  }, [session, status, router]);
+
+  if (status === 'loading') {
+    return <p>Loading...</p>; // Optional loading state
+  }
+
+  if (session?.user) {
+    return null; // Prevent rendering while redirecting
+  }
   
   return (
     <div className="flex flex-col min-h-[100dvh]">
