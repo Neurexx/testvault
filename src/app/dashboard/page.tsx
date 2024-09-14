@@ -67,7 +67,7 @@ export default function Component() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/exams"
                   className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                   prefetch={false}
                 >
@@ -142,11 +142,11 @@ export default function Component() {
                   <BookIcon className="h-5 w-5 transition-all group-hover:scale-110" />
                   <span className="sr-only">College Dashboard</span>
                 </Link>
-                <Link href="#" className="flex items-center gap-4 px-2.5 text-foreground" prefetch={false}>
+                <Link href="/papers" className="flex items-center gap-4 px-2.5 text-foreground" prefetch={false}>
                   <CheckIcon className="h-5 w-5" />
                   Exam Papers
                 </Link>
-                <Link href="#" className="flex items-center gap-4 px-2.5 text-foreground" prefetch={false}>
+                <Link href="/exams" className="flex items-center gap-4 px-2.5 text-foreground" prefetch={false}>
                   <CalendarIcon className="h-5 w-5" />
                   Online Exams
                 </Link>
