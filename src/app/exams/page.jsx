@@ -3,140 +3,134 @@
  * @see https://v0.dev/t/ilolPt5hfb7
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-
-"use client"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-
- // Assuming these are custom components
-import axios from 'axios';
-
-export default function ExamComponent() {
-  const router = useRouter();
-  const { examId } = router.query; // Get the exam ID from the URL query
-
-  const [exam, setExam] = useState(null); // To store the exam data
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Track current question
-  const [answers, setAnswers] = useState({}); // Store user answers (questionId -> selectedOptionId)
-  const [timeLeft, setTimeLeft] = useState(null); // Timer state
-  
-  // Fetch the exam data when the component loads
-  useEffect(() => {
-    if (examId) {
-      axios.get(`/api/exams/${examId}`)
-        .then(response => {
-          setExam(response.data);
-          setTimeLeft(response.data.duration * 60); // Set the time based on exam duration
-        })
-        .catch(error => {
-          console.error('Error fetching exam:', error);
-        });
-    }
-  }, [examId]);
-
-  // Handle timer countdown
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [timeLeft]);
-
-  // Handle answer selection
-  const handleAnswerChange = (questionId, optionIndex) => {
-    setAnswers(prev => ({
-      ...prev,
-      [questionId]: optionIndex,
-    }));
-  };
-
-  // Submit exam
-  const handleSubmit = () => {
-    axios.post(`/api/exams/${examId}/submit`, { answers })
-      .then(response => {
-        // Redirect or show result after successful submission
-        console.log('Exam submitted:', response.data);
-        router.push(`/results/${examId}`);
-      })
-      .catch(error => {
-        console.error('Error submitting exam:', error);
-      });
-  };
-
-  if (!exam) return <div>Loading...</div>;
-
-  const currentQuestion = exam.questions[currentQuestionIndex];
-
+export default function Component() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="flex items-center justify-between border-b px-6 py-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold">{exam.title}</h1>
+          <h1 className="text-2xl font-bold">Final Exam</h1>
           <div className="flex items-center gap-2 text-muted-foreground">
             <ClockIcon className="w-5 h-5" />
-            <span>{`${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`}</span>
+            <span>45:00</span>
           </div>
         </div>
         <div className="flex items-center gap-4 text-muted-foreground">
-          <span>Question {currentQuestionIndex + 1} of {exam.questions.length}</span>
+          <span>Question 3 of 10</span>
           <div className="h-3 w-40 rounded-full bg-muted">
-            <div
-              className="h-full rounded-full bg-primary"
-              style={{ width: `${((currentQuestionIndex + 1) / exam.questions.length) * 100}%` }}
-            />
+            <div className="h-full w-1/3 rounded-full bg-primary" />
           </div>
         </div>
       </header>
-
       <div className="flex-1 overflow-auto p-6">
         <div className="max-w-3xl mx-auto space-y-10">
+          {/* Question 1 */}
           <div>
-            <h2 className="text-xl font-bold">Question {currentQuestionIndex + 1}</h2>
-            <p className="text-muted-foreground">{currentQuestion.text}</p>
+            <h2 className="text-xl font-bold">Question 1</h2>
+            <p className="text-muted-foreground">What is the capital city of France?</p>
             <div className="mt-4 space-y-4">
-              {currentQuestion.options.map((option, index) => (
-                <div className="flex items-center gap-3" key={index}>
-                  <Checkbox
-                    id={`option-${index}`}
-                    checked={answers[currentQuestion._id] === index}
-                    onChange={() => handleAnswerChange(currentQuestion._id, index)}
-                  />
-                  <label htmlFor={`option-${index}`} className="text-base">
-                    {option.optionText}
-                  </label>
-                </div>
-              ))}
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer1" />
+                <label htmlFor="answer1" className="text-base">
+                  Paris
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer2" />
+                <label htmlFor="answer2" className="text-base">
+                  London
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer3" />
+                <label htmlFor="answer3" className="text-base">
+                  Berlin
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer4" />
+                <label htmlFor="answer4" className="text-base">
+                  Madrid
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Question 2 */}
+          <div>
+            <h2 className="text-xl font-bold">Question 2</h2>
+            <p className="text-muted-foreground">Which of the following is a programming language?</p>
+            <div className="mt-4 space-y-4">
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer1" />
+                <label htmlFor="answer1" className="text-base">
+                  English
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer2" />
+                <label htmlFor="answer2" className="text-base">
+                  Mathematics
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer3" />
+                <label htmlFor="answer3" className="text-base">
+                  Python
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer4" />
+                <label htmlFor="answer4" className="text-base">
+                  History
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Question 3 */}
+          <div>
+            <h2 className="text-xl font-bold">Question 3</h2>
+            <p className="text-muted-foreground">Which of the following is a fruit?</p>
+            <div className="mt-4 space-y-4">
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer1" />
+                <label htmlFor="answer1" className="text-base">
+                  Apple
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer2" />
+                <label htmlFor="answer2" className="text-base">
+                  Pencil
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer3" />
+                <label htmlFor="answer3" className="text-base">
+                  Car
+                </label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox id="answer4" />
+                <label htmlFor="answer4" className="text-base">
+                  Desk
+                </label>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="border-t py-4 px-6 flex justify-between">
-        <Button
-          onClick={() => setCurrentQuestionIndex(prev => Math.max(prev - 1, 0))}
-          disabled={currentQuestionIndex === 0}
-        >
-          Previous
+      <div className="border-t py-4 px-6">
+        <Button type="submit" className="ml-auto block">
+          Submit Exam
         </Button>
-        {currentQuestionIndex < exam.questions.length - 1 ? (
-          <Button onClick={() => setCurrentQuestionIndex(prev => prev + 1)}>
-            Next
-          </Button>
-        ) : (
-          <Button onClick={handleSubmit}>
-            Submit Exam
-          </Button>
-        )}
       </div>
     </div>
-  );
+  )
 }
-
 
 
 function ClockIcon(props) {
