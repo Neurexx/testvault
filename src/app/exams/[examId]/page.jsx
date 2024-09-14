@@ -47,7 +47,8 @@ export default function ExamComponent() {
       axios.get(`/api/exams/${examId}`)
         .then(response => {
           setExam(response.data);
-          setTimeLeft(response.data.duration * 60); // Set the time based on exam duration
+          setTimeLeft(response.data.duration * 60);
+          console.log(response) // Set the time based on exam duration
         })
         .catch(error => {
           console.error('Error fetching exam:', error);

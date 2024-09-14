@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Exam from '@/models/examModel';
-
+import Question from "@/models/questionModel"
 export async function GET(req, { params }) {
   const { id } = params;
 
@@ -14,6 +14,7 @@ export async function GET(req, { params }) {
     }
     return NextResponse.json(exam, { status: 200 });
   } catch (error) {
+    
     return NextResponse.json({ error: 'Error fetching exam' }, { status: 500 });
   }
 }

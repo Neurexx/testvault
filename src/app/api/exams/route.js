@@ -36,18 +36,14 @@ export async function POST(req) {
 
 
 export async function GET(req) {
-    const { id } = await req.params;
+    
   
     await dbConnect();
-  console.log("hey",id)
     try {
-      const exam = await Exam.findById(id).populate('questions');
-      if (!exam) {
-        return NextResponse.json({ error: 'Exam not found' }, { status: 404 });
+        const exams = await Exam.find().populate('questions'); // Populate with question data
+        return NextResponse.json(exams);
+      } catch (error) {
+        return res.status(500).json({ error: 'Error fetching exams' });
       }
-      return NextResponse.json(exam, { status: 200 });
-    } catch (error) {
-        console.log(error)
-      return NextResponse.json({ error: 'Error fetching exam' }, { status: 500 });
-    }
+    
   }
