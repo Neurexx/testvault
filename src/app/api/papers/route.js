@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Paper from "@/models/paperModel.ts";
 import { NextResponse, NextRequest } from "next/server";
+import {S3Client, PutObjectCommand} from "@aws-sdk/client-s3"
 
 export async function GET(req) {
   await dbConnect();
