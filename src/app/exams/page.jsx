@@ -1,8 +1,3 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/ilolPt5hfb7
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -36,13 +31,14 @@ export default function Component() {
         <h1 className="text-2xl font-bold mb-4">Available Exams</h1>
         <div className="space-y-4">
           {exams.map((exam) => (
-            <Card key={exam._id} className="shadow-lg">
+            <Card key={exam._id} className="shadow-lg p-4">
               <CardContent>
                 <CardTitle>{exam.title}</CardTitle>
               </CardContent>
+              <CardContent>Duration: {exam.duration} mins</CardContent>
               <CardFooter>
                 <Link href={`/exams/${exam._id}`} className="text-blue-500 hover:underline">
-                  View Details
+                  <Button>Start Exam</Button>
                 </Link>
               </CardFooter>
             </Card>

@@ -1,66 +1,115 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/ilolPt5hfb7
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 
-"use client"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
+"use client";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import {useSession} from "next-auth/react"
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-
- // Assuming these are custom components
-import axios from 'axios';
+// Assuming these are custom components
+import axios from "axios";
 
 export default function ExamComponent() {
-  
-  const { examId } = useParams() // Get the exam ID from the URL query
+  const { examId } = useParams(); // Get the exam ID from the URL query
 
-  
-
-
+  const router = useRouter();
+  const [isExamActive, setIsExamActive] = useState(true);
+  const {data:session,status}=useSession()
   const [exam, setExam] = useState(null); // To store the exam data
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Track current question
-  const [answers, setAnswers] = useState({}); // Store user answers (questionId -> selectedOptionId)
+  const [answers, setAnswers] = useState([]); // Store user answers (questionId -> selectedOptionId)
   const [timeLeft, setTimeLeft] = useState(null); // Timer state
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'ArrowRight') {
-        setCurrentQuestionIndex((prev) => Math.min(prev + 1, exam.questions.length - 1));
-      } else if (event.key === 'ArrowLeft') {
-        setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0));
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [exam]);
-  // Fetch the exam data when the component loads
   
+  const enterFullScreen = () => {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    }
+  };
+
+  const exitExam = () => {
+    setIsExamActive(false);
+    router.replace(`/exams`); // Redirect to an exam failed page
+    alert("The exam is now stopped.");
+  };
+
+  // Fetch the exam data when the component loads
+
   useEffect(() => {
     if (examId) {
-      axios.get(`/api/exams/${examId}`)
-        .then(response => {
+      axios
+        .get(`/api/exams/${examId}`)
+        .then((response) => {
           setExam(response.data);
           setTimeLeft(response.data.duration * 60);
-          console.log(response) // Set the time based on exam duration
+          console.log(response); // Set the time based on exam duration
         })
-        .catch(error => {
-          console.error('Error fetching exam:', error);
+        .catch((error) => {
+          console.error("Error fetching exam:", error);
         });
     }
   }, [examId]);
+
+  const handleVisibilityChange = () => {
+    if (document.hidden) {
+      exitExam();
+    }
+  };
+
+  const handleFullScreenChange = () => {
+    if (
+      !document.fullscreenElement &&
+      !document.webkitIsFullScreen &&
+      !document.mozFullScreen &&
+      !document.msFullscreenElement
+    ) {
+      exitExam(); // Exit exam if full-screen mode is left
+    }
+  };
+
+  useEffect(() => {
+    // Ensure the exam starts in full-screen mode
+    enterFullScreen();
+
+    // Listen for full-screen exit
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullScreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullScreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullScreenChange);
+
+    // Listen for tab switching
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Clean up event listeners when the component unmounts
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullScreenChange
+      );
+      document.removeEventListener(
+        "mozfullscreenchange",
+        handleFullScreenChange
+      );
+      document.removeEventListener(
+        "MSFullscreenChange",
+        handleFullScreenChange
+      );
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   // Handle timer countdown
   useEffect(() => {
     if (timeLeft > 0) {
       const timer = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
+        setTimeLeft((prev) => prev - 1);
       }, 1000);
       return () => clearInterval(timer);
     }
@@ -68,22 +117,26 @@ export default function ExamComponent() {
 
   // Handle answer selection
   const handleAnswerChange = (questionId, optionIndex) => {
-    setAnswers(prev => ({
-      ...prev,
-      [questionId]: optionIndex,
-    }));
+    setAnswers([
+      ...answers,
+      {[questionId]: optionIndex}
+    ]);
   };
 
   // Submit exam
   const handleSubmit = () => {
-    axios.post(`/api/exams/${examId}/submit`, { answers })
-      .then(response => {
+    console.log(answers)
+    axios
+      .post(`/api/exams/${examId}/submit`, { answers, examId, timeSpent:3, studentId:session.user._id })
+      .then((response) => {
+        
         // Redirect or show result after successful submission
-        console.log('Exam submitted:', response.data);
-        router.push(`/results/${examId}`);
+        console.log("Exam submitted:", response.data);
+        router.replace("/exams")
+        
       })
-      .catch(error => {
-        console.error('Error submitting exam:', error);
+      .catch((error) => {
+        console.error("Error submitting exam:", error);
       });
   };
 
@@ -97,16 +150,17 @@ export default function ExamComponent() {
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-bold">{exam.title}</h1>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <ClockIcon className="w-5 h-5" />
-            <span>{`${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`}</span>
+            <span>{`${Math.floor(timeLeft / 60)}:${String(
+              timeLeft % 60
+            ).padStart(2, "0")}`}</span>
           </div>
         </div>
         <div className="flex items-center gap-4 text-muted-foreground">
-          <span>Question {currentQuestionIndex + 1} of {exam.questions.length}</span>
+          <span>{exam.questions.length} Questions</span>
           <div className="h-3 w-40 rounded-full bg-muted">
             <div
               className="h-full rounded-full bg-primary"
-              style={{ width: `${((currentQuestionIndex + 1) / exam.questions.length) * 100}%` }}
+              style={{ width: `100%` }}
             />
           </div>
         </div>
@@ -114,66 +168,37 @@ export default function ExamComponent() {
 
       <div className="flex-1 overflow-auto p-6">
         <div className="max-w-3xl mx-auto space-y-10">
-          <div>
-            <h2 className="text-xl font-bold">Question {currentQuestionIndex + 1}</h2>
-            <p className="text-muted-foreground">{currentQuestion.text}</p>
-            <div className="mt-4 space-y-4">
-              {currentQuestion.options.map((option, index) => (
-                <div className="flex items-center gap-3" key={index}>
-                  <Checkbox
-                    id={`option-${index}`}
-                    checked={answers[currentQuestion._id] === index}
-                    onChange={() => handleAnswerChange(currentQuestion._id, index)}
-                  />
-                  <label htmlFor={`option-${index}`} className="text-base">
-                    {option.optionText}
-                  </label>
-                </div>
-              ))}
+          {exam.questions.map((question, index) => (
+            <div key={question._id} className="m-4 p-4">
+              <h2 className="text-xl font-bold">Question {index + 1}</h2>
+              <p className="text-muted-foreground mt-4">{question.text}</p>
+              <div className="mt-4 space-y-4">
+                {question.options.map((option, optionIndex) => (
+                  <div className="flex items-center gap-3" key={optionIndex}>
+                    <Checkbox
+                      id={`option-${optionIndex}-${index}`}
+                      checked={answers[question._id] === optionIndex}
+                      onChange={() =>
+                        handleAnswerChange(question._id, optionIndex)
+                      }
+                    />
+                    <label
+                      htmlFor={`option-${optionIndex}-${index}`}
+                      className="text-base"
+                    >
+                      {option.optionText}
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
 
-      <div className="border-t py-4 px-6 flex justify-between">
-        <Button
-          onClick={() => setCurrentQuestionIndex(prev => Math.max(prev - 1, 0))}
-          disabled={currentQuestionIndex === 0}
-        >
-          Previous
-        </Button>
-        {currentQuestionIndex < exam.questions.length - 1 ? (
-          <Button onClick={() => setCurrentQuestionIndex(prev => prev + 1)}>
-            Next
-          </Button>
-        ) : (
-          <Button onClick={handleSubmit}>
-            Submit Exam
-          </Button>
-        )}
+      <div className="border-t py-4 px-6 flex justify-end">
+        <Button onClick={handleSubmit}>Submit Exam</Button>
       </div>
     </div>
   );
-}
-
-
-
-function ClockIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
-  )
 }

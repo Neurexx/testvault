@@ -40,7 +40,7 @@ export async function GET(req) {
   
     await dbConnect();
     try {
-        const exams = await Exam.find().populate('questions'); // Populate with question data
+        const exams = await Exam.find().sort({createdAt:'desc'}).populate('questions'); // Populate with question data
         return NextResponse.json(exams);
       } catch (error) {
         return res.status(500).json({ error: 'Error fetching exams' });

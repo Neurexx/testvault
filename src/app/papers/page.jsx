@@ -1,8 +1,4 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/6OvpedbREib
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
+
 "use client";
 import axios from "axios";
 import { useState, useMemo, useEffect } from "react";
