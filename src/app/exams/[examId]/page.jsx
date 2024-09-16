@@ -17,7 +17,7 @@ export default function ExamComponent() {
   const {data:session,status}=useSession()
   const [exam, setExam] = useState(null); // To store the exam data
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Track current question
-  const [answers, setAnswers] = useState([]); // Store user answers (questionId -> selectedOptionId)
+  const [answers, setAnswers] = useState({}); // Store user answers (questionId -> selectedOptionId)
   const [timeLeft, setTimeLeft] = useState(null); // Timer state
   
   const enterFullScreen = () => {
@@ -117,17 +117,27 @@ export default function ExamComponent() {
 
   // Handle answer selection
   const handleAnswerChange = (questionId, optionIndex) => {
-    setAnswers([
+    setAnswers({
       ...answers,
-      {[questionId]: optionIndex}
-    ]);
+      [questionId]: optionIndex
+  });
   };
 
   // Submit exam
   const handleSubmit = () => {
-    console.log(answers)
+    const submissionData = {
+      studentId: session.user._id, // Replace with actual student ID (e.g., from session)
+      examId,
+      answers: Object.keys(answers).map(questionId => ({
+        question: questionId,
+        selectedOption: answers[questionId],
+      })),
+      timeSpent: exam.duration * 60 - timeLeft, // Time spent in seconds
+    };
+    console.log(submissionData)
+
     axios
-      .post(`/api/exams/${examId}/submit`, { answers, examId, timeSpent:3, studentId:session.user._id })
+      .post(`/api/exams/${examId}/submit`, submissionData)
       .then((response) => {
         
         // Redirect or show result after successful submission
@@ -167,33 +177,33 @@ export default function ExamComponent() {
       </header>
 
       <div className="flex-1 overflow-auto p-6">
-        <div className="max-w-3xl mx-auto space-y-10">
-          {exam.questions.map((question, index) => (
-            <div key={question._id} className="m-4 p-4">
-              <h2 className="text-xl font-bold">Question {index + 1}</h2>
-              <p className="text-muted-foreground mt-4">{question.text}</p>
-              <div className="mt-4 space-y-4">
-                {question.options.map((option, optionIndex) => (
-                  <div className="flex items-center gap-3" key={optionIndex}>
-                    <Checkbox
-                      id={`option-${optionIndex}-${index}`}
-                      checked={answers[question._id] === optionIndex}
-                      onChange={() =>
-                        handleAnswerChange(question._id, optionIndex)
-                      }
-                    />
-                    <label
-                      htmlFor={`option-${optionIndex}-${index}`}
-                      className="text-base"
-                    >
-                      {option.optionText}
-                    </label>
-                  </div>
-                ))}
-              </div>
+      <div className="max-w-3xl mx-auto space-y-10">
+        {exam.questions.map((question, index) => (
+          <div key={question._id} className="m-4 p-4">
+            <h2 className="text-xl font-bold">Question {index + 1}</h2>
+            <p className="text-muted-foreground mt-4">{question.text}</p>
+            <div className="mt-4 space-y-4">
+              {question.options.map((option, optionIndex) => (
+                <div className="flex items-center gap-3" key={`${question._id}-${optionIndex}`}>
+                  <input
+                type="radio"
+                id={`option-${optionIndex}-${index}`}
+                name={`question-${question._id}`} // Group the radio buttons by question
+                checked={answers[question._id] === optionIndex}
+                onChange={() => handleAnswerChange(question._id, optionIndex)}
+              />
+              <label
+                htmlFor={`option-${optionIndex}-${index}`}
+                className="text-base"
+              >
+                {option.optionText}
+              </label>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
       </div>
 
       <div className="border-t py-4 px-6 flex justify-end">
