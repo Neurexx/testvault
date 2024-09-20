@@ -52,7 +52,7 @@ export default function CreateThread() {
     <div className="container mx-auto py-8 px-4 md:px-8">
       <h1 className="text-2xl font-bold mb-6">Create New Thread</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="flex flex-col justify-center">
         <div>
           <label htmlFor="title" className="block text-sm font-medium">
             Thread Title
@@ -99,7 +99,7 @@ export default function CreateThread() {
           </Select>
         </div>
 
-        <Button type="submit" className=" right-4 absolute sm:mx-auto" disabled={loading}>
+        <Button type="submit" className="mx-auto p-2" disabled={loading}>
           {loading ? "Creating..." : "Create Thread"}
         </Button>
       </form>
