@@ -88,7 +88,7 @@ export default function Component() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="/forums"
+                  href="/threads"
                   className="flex h-9 w-9 bg-accent items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                   prefetch={false}
                 >
@@ -149,7 +149,7 @@ export default function Component() {
                   <BarChartIcon className="h-5 w-5" />
                   Progress Tracker
                 </Link>
-                <Link href="#" className="flex items-center gap-4 px-2.5 text-foreground" prefetch={false}>
+                <Link href="/threads" className="flex items-center gap-4 px-2.5 text-foreground" prefetch={false}>
                   <ForumIcon className="h-5 w-5 " />
                   Community
                 </Link>
