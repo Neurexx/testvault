@@ -1,4 +1,5 @@
 import ForumThread from "@/models/forumThreadModel";
+import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect"
 
