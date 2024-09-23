@@ -1,6 +1,6 @@
 "use client"
 
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import {Sheet,SheetTrigger,SheetContent} from "@/components/ui/sheet"
 import { Button } from '@/components/ui/button';
@@ -9,24 +9,33 @@ import {Card,CardContent,CardHeader,CardTitle,CardDescription } from '@/componen
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Table,TableBody,TableCaption,TableCell,TableHead,TableHeader,TableRow } from '@/components/ui/table';
-import { DropdownMenu,DropdownMenuContent,DropdownMenuTrigger,DropdownMenuLabel,DropdownMenuItem,DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 
+import { DropdownMenu,DropdownMenuContent,DropdownMenuTrigger,DropdownMenuLabel,DropdownMenuItem,DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
+import { cn } from "@/lib/utils"
+import { redirect, useRouter } from 'next/navigation';
 
 export default function TeacherDashboard() {
   const { data: session,status } = useSession();
   console.log(session)
+  const router =useRouter()
+
+ async function handleSignOut(e) {
+    await signOut()
+    
+ }
 
   if (!session || session.user.role !== 'teacher') {
-    return <p>Access Denied</p>;
+    router.push("/login")
   }
 
+  
+
   return (
-     <div className="flex min-h-screen w-full">
+     <div className="">
     
-    <div className="flex justify-center ">
-      {/* <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:h-16 sm:px-6">
-        <Sheet>
+    <div className="flex flex-col justify-center ">
+      <header className="sticky top-0 z-30 h-14 w-screen  border-b bg-background px-4 sm:h-16 sm:px-6">
+        {/* <Sheet>
           <SheetTrigger asChild>
             <Button size="icon" variant="outline" className="lg:hidden">
               <MenuIcon className="h-5 w-5" />
@@ -80,10 +89,10 @@ export default function TeacherDashboard() {
             placeholder="Search..."
             className="w-full rounded-md bg-muted/40 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-gray-800"
           />
-        </div>
-        <DropdownMenu>
+        </div> */}
+        <DropdownMenu >
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button variant="ghost" size="icon" className="rounded-full absolute right-4 top-3">
               <img
                 src="/placeholder.svg"
                 width="36"
@@ -101,10 +110,10 @@ export default function TeacherDashboard() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Help</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </header> */}
+      </header>
       <main className="p-4 sm:p-6">
         <Tabs defaultValue="upload" className=''>
           <TabsList className="mb-4 flex border-b">
