@@ -3,16 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function Signup() {
 
   const [userData,setUserData]=useState({})
   const [error,setError]=useState("")
   const router=useRouter()
+  const {data:session, status}=useSession()
+
+  
+  useEffect(() => {
+    if (status === 'loading') return; // Wait until session status is known
+    if (session?.user) {
+      //@ts-ignore
+      if(session?.user.role==="student"){
+        router.push('/dashboard');}
+      else{
+      router.push('/teacher-dashboard');}
+    }
+  }, [session, status, router]);
 
   async function handleSubmit(e:FormEvent){
     
@@ -40,10 +53,13 @@ export default function Signup() {
             variant: 'destructive',
           });
         }
+
       }
-  
-      if (result?.url) {
-        router.replace('/dashboard');
+     console.log(result)
+      if (result?.error) {
+        //@ts-ignore
+        setError(result.error)
+
       }}
     
   

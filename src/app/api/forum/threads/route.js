@@ -9,6 +9,7 @@ export async function POST(req) {
 
     try {
         const { title, category, author, content } =  await req.json();
+        
         const newThread = new ForumThread({ title, category, author, content });
         await newThread.save();
         return NextResponse.json(newThread,{status:201});

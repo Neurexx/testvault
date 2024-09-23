@@ -30,6 +30,7 @@ const userSchema: Schema<User> = new Schema({
       ref: 'Exam',
     },
   ],
+  role: { type: String, enum: ['student', 'teacher'], default: 'student' }
 }, { timestamps: true });
 
 const UserModel =

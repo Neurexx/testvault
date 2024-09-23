@@ -49,6 +49,9 @@ export const authOptions: NextAuthOptions = {
         token._id = user._id?.toString(); // Convert ObjectId to string
       
         token.username = user.name;
+                //@ts-ignore
+
+        token.role = user.role
       }
       return token;
     },
@@ -58,6 +61,9 @@ export const authOptions: NextAuthOptions = {
         session.user._id = token._id;
         //@ts-ignore
         session.user.name = token.name;
+                //@ts-ignore
+
+        session.user.role = token.role
       }
       return session;
     },
