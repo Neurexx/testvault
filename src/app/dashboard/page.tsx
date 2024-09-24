@@ -11,12 +11,34 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { signOut, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
+import axios from "axios"
 
 export default function Component() {
   const {data:session,status}=useSession()
  const a="adfd"
- 
+ const [exams,setExams]=useState()
+ const [papers,setPapers]=useState()
+
+ useEffect(()=>{
+  async function fetchData() {
+    try{
+      const res=await axios.get("/api/exams")
+      setExams(res.data)
+      const res2=await axios.get("/api/papers")
+      setPapers(res2.data)
+    }
+    catch(e){
+      console.log(e)
+
+    }
+  }
+
+  fetchData()
+  
+ },[])
+
+
   const router=useRouter()
   useEffect(() => {
     if (status === 'loading') return; // Wait until session status is known
@@ -207,170 +229,85 @@ export default function Component() {
           </DropdownMenu>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-        <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
-          <Card className="sm:col-span-2 sm:mx-0 mx-auto">
-            <CardHeader className="pb-3">
-              <CardTitle>Exam Papers</CardTitle>
-              <CardDescription className="max-w-lg text-balance leading-relaxed">
-                Access past exam papers from your courses.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="all">
-                <div className="flex flex-col  sm:flex-row items-center">
-                  <TabsList className="w-full sm:w-auto">
-                    <TabsTrigger value="all">All</TabsTrigger>
-                    <TabsTrigger value="computer-science">Computer Science</TabsTrigger>
-                    <TabsTrigger value="mathematics">Mathematics</TabsTrigger>
-                    {/* <TabsTrigger value="physics">Physics</TabsTrigger> */}
-                  </TabsList>
-                  <div className="mt-4 sm:mt-0 sm:ml-auto flex items-center gap-2 w-full sm:w-auto">
-                    <Input
-                      type="search"
-                      placeholder="Search exam papers..."
-                      className="w-full sm:w-[200px] lg:w-[336px] rounded-lg bg-background pl-8"
-                    />
-                  </div>
-                </div>
-                <TabsContent value="all">
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Course</TableHead>
-                          <TableHead>Semester</TableHead>
-                          <TableHead>Year</TableHead>
-                          <TableHead>Download</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>Introduction to Computer Science</TableCell>
-                          <TableCell>Fall</TableCell>
-                          <TableCell>2022</TableCell>
-                          <TableCell>
-                            <Button variant="outline" size="sm">
-                              <DownloadIcon className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Calculus I</TableCell>
-                          <TableCell>Spring</TableCell>
-                          <TableCell>2021</TableCell>
-                          <TableCell>
-                            <Button variant="outline" size="sm">
-                              <DownloadIcon className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Mechanics</TableCell>
-                          <TableCell>Fall</TableCell>
-                          <TableCell>2022</TableCell>
-                          <TableCell>
-                            <Button variant="outline" size="sm">
-                              <DownloadIcon className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Data Structures and Algorithms</TableCell>
-                          <TableCell>Spring</TableCell>
-                          <TableCell>2021</TableCell>
-                          <TableCell>
-                            <Button variant="outline" size="sm">
-                              <DownloadIcon className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Linear Algebra</TableCell>
-                          <TableCell>Fall</TableCell>
-                          <TableCell>2022</TableCell>
-                          <TableCell>
-                            <Button variant="outline" size="sm">
-                              <DownloadIcon className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-          <Card className="sm:col-span-2">
-            <CardHeader className="pb-3">
-              <CardTitle>Online Exams</CardTitle>
-              <CardDescription className="max-w-lg text-balance leading-relaxed">
-                View your upcoming online exams and their schedules.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <Card>
+      <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
+        
+        {/* Exam Papers Section */}
+        <Card className="sm:col-span-2 sm:mx-0 mx-auto">
+          <CardHeader className="pb-3">
+            <CardTitle>Exam Papers</CardTitle>
+            <CardDescription className="max-w-lg text-balance leading-relaxed">
+              Access past exam papers from your courses.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>College Name</TableHead>
+                    <TableHead>Paper Name</TableHead>
+                    <TableHead>Paper Code</TableHead>
+                    <TableHead>Year</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {//@ts-ignore
+                  papers?.map((paper) => (
+                    <TableRow key={paper._id}>
+                      <TableCell>{paper.collegeName}</TableCell>
+                      <TableCell>{paper.paperName}</TableCell>
+                      <TableCell>{paper.paperCode}</TableCell>
+                      <TableCell>{paper.year}</TableCell>
+                      <TableCell>
+                        <Button>
+                          <a href={paper.url}>Download</a>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Online Exams Section */}
+        <Card className="sm:col-span-2">
+          <CardHeader className="pb-3">
+            <CardTitle>Online Exams</CardTitle>
+            <CardDescription className="max-w-lg text-balance leading-relaxed">
+              View your upcoming online exams and their schedules.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {//@ts-ignore
+              exams?.map((exam) => (
+                <Card key={exam._id}>
                   <CardHeader className="pb-2">
-                    <CardTitle>Introduction to Computer Science</CardTitle>
-                    <CardDescription>Final Exam</CardDescription>
+                    <CardTitle>{exam.title}</CardTitle>
+                    <CardDescription>Exam Date: {new Date(exam.date).toLocaleDateString()}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-sm text-muted-foreground">Date</div>
-                        <div className="font-medium">May 15, 2023</div>
+                        <div className="text-sm text-muted-foreground">Duration</div>
+                        <div className="font-medium">{exam.duration} minutes</div>
                       </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">Time</div>
-                        <div className="font-medium">2:00 PM</div>
-                      </div>
+                      
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button>Take Exam</Button>
+                    <Button>
+                      <Link href={`/exams/${exam._id}`}>Take Exam</Link></Button>
                   </CardFooter>
                 </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle>Calculus I</CardTitle>
-                    <CardDescription>Midterm Exam</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm text-muted-foreground">Date</div>
-                        <div className="font-medium">April 20, 2023</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">Time</div>
-                        <div className="font-medium">10:00 AM</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button>Take Exam</Button>
-                  </CardFooter>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle>Mechanics</CardTitle>
-                    <CardDescription>Final Exam</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-sm text-muted-foreground">Date</div>
-                        <div className="font-medium">June 5, 2023</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
       
       </div>
     </div>

@@ -198,17 +198,7 @@ export default function Component() {
               <SelectItem value={"2020"}>2020</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Select difficulty" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All Difficulties">All Difficulties</SelectItem>
-              <SelectItem value="Beginner">Beginner</SelectItem>
-              <SelectItem value="Intermediate">Intermediate</SelectItem>
-              <SelectItem value="Advanced">Advanced</SelectItem>
-            </SelectContent>
-          </Select>
+          
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-32">
               <SelectValue placeholder="Sort by" />
@@ -217,7 +207,7 @@ export default function Component() {
               <SelectItem value="Default">Default</SelectItem>
               <SelectItem value="subject">Subject</SelectItem>
               <SelectItem value="year">Year</SelectItem>
-              <SelectItem value="difficulty">Difficulty</SelectItem>
+              
             </SelectContent>
           </Select>
         </div>
