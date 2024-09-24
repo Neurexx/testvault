@@ -246,7 +246,7 @@ export default function Component() {
                   <TableRow>
                     <TableHead>College Name</TableHead>
                     <TableHead>Paper Name</TableHead>
-                    <TableHead>Paper Code</TableHead>
+                    
                     <TableHead>Year</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -256,7 +256,7 @@ export default function Component() {
                     <TableRow key={paper._id}>
                       <TableCell>{paper.collegeName}</TableCell>
                       <TableCell>{paper.paperName}</TableCell>
-                      <TableCell>{paper.paperCode}</TableCell>
+                      {/* <TableCell>{paper.paperCode}</TableCell> */}
                       <TableCell>{paper.year}</TableCell>
                       <TableCell>
                         <Button>
