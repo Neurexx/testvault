@@ -97,7 +97,7 @@ export default function Component() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/progress"
                   className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                   prefetch={false}
                 >
@@ -167,7 +167,7 @@ export default function Component() {
                   <ExamIcon className="h-5 w-5 fill-white" />
                   Online Exams
                 </Link>
-                <Link href="#" className="flex items-center gap-4 px-2.5 text-foreground" prefetch={false}>
+                <Link href="/progress" className="flex items-center gap-4 px-2.5 text-foreground" prefetch={false}>
                   <BarChartIcon className="h-5 w-5" />
                   Progress Tracker
                 </Link>
@@ -260,7 +260,7 @@ export default function Component() {
                       <TableCell>{paper.year}</TableCell>
                       <TableCell>
                         <Button>
-                          <a href={paper.url}>Download</a>
+                          <a href={paper.url} >Download</a>
                         </Button>
                       </TableCell>
                     </TableRow>

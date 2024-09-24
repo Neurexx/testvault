@@ -53,8 +53,9 @@ console.log(answers)
       exam: examId,
       answers: evaluatedAnswers,
       timeSpent,
+      totalMarks:exam.totalMarks,
       score,
-      isCompleted: true,
+      
       submittedAt: new Date(),
     });
 
