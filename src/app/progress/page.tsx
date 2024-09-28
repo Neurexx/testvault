@@ -44,12 +44,14 @@ export default function StudentProgressChart() {
 
   return (
     
-    <><Card>
+    <>
+    <main className="flex flex-col p-4 gap-2">
+    <Card className="">
     <CardHeader>
       <CardTitle>Student Progress Over Time</CardTitle>
     </CardHeader>
     <CardContent>
-      <ChartContainer config={chartConfig}>
+      <ChartContainer config={chartConfig} className="h-full">
       <LineChart
           accessibilityLayer
           data={progressData}
@@ -61,10 +63,10 @@ export default function StudentProgressChart() {
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="date"
-            tickLine={false}
-            axisLine={false}
+            tickLine={true}
+            axisLine={true}
             tickMargin={8}
-            tickFormatter={(value) => value.slice(0, 3)}
+            tickFormatter={(value) => value}
           />
           <ChartTooltip
             cursor={false}
@@ -87,6 +89,51 @@ export default function StudentProgressChart() {
         </LineChart>
       </ChartContainer>
     </CardContent>
-  </Card></>
+  </Card>
+  <Card className="">
+    <CardHeader>
+      <CardTitle>Student Progress Over Time</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <ChartContainer config={chartConfig} className="h-full">
+      <LineChart
+          accessibilityLayer
+          data={progressData}
+          margin={{
+            left: 12,
+            right: 12,
+          }}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="date"
+            tickLine={true}
+            axisLine={true}
+            tickMargin={8}
+            tickFormatter={(value) => value}
+          />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent hideLabel />}
+          />
+          <Line
+            dataKey="averageScore"
+            type="linear"
+            stroke="var(--color-averageScore)"
+            strokeWidth={2}
+            dot={false}
+          />
+          <Line
+            dataKey="averageTimeSpent"
+            type="linear"
+            stroke="var(--color-averageTimeSpent)"
+            strokeWidth={2}
+            dot={false}
+          />
+        </LineChart>
+      </ChartContainer>
+    </CardContent>
+  </Card>
+  </main></>
   );
 }

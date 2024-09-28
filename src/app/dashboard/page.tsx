@@ -13,6 +13,7 @@ import { signOut, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import axios from "axios"
+import ThemeToggle from "@/components/ThemeToggle"
 
 export default function Component() {
   const {data:session,status}=useSession()
@@ -205,17 +206,20 @@ export default function Component() {
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
             />
           </div>
+          <ThemeToggle/>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-                <img
+                {/* <img
                   src="/placeholder.svg"
                   width={36}
                   height={36}
                   alt={"X"}
                   className="overflow-hidden rounded-full"
                   style={{ aspectRatio: "36/36", objectFit: "cover" }}
-                />
+                /> */}
+                {//@ts-ignore
+                session?.user.name[0]}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

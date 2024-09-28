@@ -7,6 +7,7 @@ import Image from "next/image"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
+import ThemeToggle from "@/components/ThemeToggle"
 
 export default function Component() {
   const { data: session, status } = useSession();
@@ -32,6 +33,7 @@ export default function Component() {
       <header className="px-4 lg:px-6 h-14 flex items-center justify-center">
       
         <nav className="ml-auto flex gap-4 sm:gap-6">
+          <ThemeToggle/>
           <Link href="/signup" className="text-sm  font-medium hover:underline underline-offset-4" prefetch={false}>
             Sign up
           </Link>
