@@ -233,10 +233,10 @@ export default function Component() {
           </DropdownMenu>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-      <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
+      <div className="flex flex-col gap-4 items-center justify-center">
         
         {/* Exam Papers Section */}
-        <Card className="sm:col-span-2 sm:mx-0 mx-auto">
+        <Card className="w-full">
           <CardHeader className="pb-3">
             <CardTitle>Exam Papers</CardTitle>
             <CardDescription className="max-w-lg text-balance leading-relaxed">
@@ -276,7 +276,7 @@ export default function Component() {
         </Card>
         
         {/* Online Exams Section */}
-        <Card className="sm:col-span-2">
+        <Card className="w-full">
           <CardHeader className="pb-3">
             <CardTitle>Online Exams</CardTitle>
             <CardDescription className="max-w-lg text-balance leading-relaxed">

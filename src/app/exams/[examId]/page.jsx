@@ -3,15 +3,17 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {useSession} from "next-auth/react"
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-
+import * as faceapi from 'face-api.js';
 // Assuming these are custom components
 import axios from "axios";
 
 export default function ExamComponent() {
   const { examId } = useParams(); // Get the exam ID from the URL query
-
+  const [videoStream, setVideoStream] = useState(null);
+  const videoRef = useRef(null);
+  const [eyeDirection, setEyeDirection] = useState('Looking at Screen');
   const router = useRouter();
   const [isExamActive, setIsExamActive] = useState(true);
   const {data:session,status}=useSession()
@@ -114,6 +116,76 @@ export default function ExamComponent() {
       return () => clearInterval(timer);
     }
   }, [timeLeft]);
+  const detectEyeDirection = (leftEye, rightEye) => {
+    // Eye positions can be analyzed based on relative positions of the left and right eye points.
+    const eyeMidPoint = {
+      x: (leftEye[0].x + rightEye[3].x) / 2,
+      y: (leftEye[0].y + rightEye[3].y) / 2,
+    };
+
+    // Basic check to determine if the eyes are centered
+    if (eyeMidPoint.x > 150 && eyeMidPoint.x < 450) {
+      setEyeDirection('Looking at Screen');
+      
+    } else {
+      setEyeDirection('Looking Away');
+      router.replace("/exams")
+    }
+  };
+
+  useEffect(()=>{
+
+    let interval;
+    
+    async function loadModels() {
+      // Load models for face detection and landmark recognition
+      await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+      await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+    }
+
+    async function setupProctoring() {
+      // Load the models
+      await loadModels();
+
+      // Get webcam stream
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setVideoStream(stream);
+      const videoElement = document.getElementById('webcam');
+      videoElement.srcObject = stream;
+      videoElement.play();
+
+      // Continuously detect faces and landmarks
+     interval= setInterval(async () => {
+        const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
+        if (detections.length === 0) {
+          
+          router.replace("/exams")
+          }
+          
+
+        
+        else if(detections.length>1){
+          
+          router.replace("/exams")
+        
+        } else {
+          const landmarks = detections[0].landmarks;
+          const leftEye = landmarks.getLeftEye();
+          const rightEye = landmarks.getRightEye();
+
+          // Analyze eye positions
+          detectEyeDirection(leftEye, rightEye);
+        }
+      }, 2000);
+
+      
+    }
+
+    setupProctoring();
+return ()=>{
+ clearInterval(interval)
+}
+  },[router])
 
   // Handle answer selection
   const handleAnswerChange = (questionId, optionIndex) => {
@@ -165,6 +237,8 @@ export default function ExamComponent() {
             ).padStart(2, "0")}`}</span>
           </div>
         </div>
+        <video id="webcam" width="600" height="400" className="fixed top-0 right-0"  />
+      <p>Eye Direction: {eyeDirection}</p>
         <div className="flex items-center gap-4 text-muted-foreground">
           <span>{exam.questions.length} Questions</span>
           <div className="h-3 w-40 rounded-full bg-muted">
