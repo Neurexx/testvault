@@ -1,6 +1,8 @@
 
 "use client";
 import axios from "axios";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
+import Link from "next/link";
 import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,6 +13,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import {  CheckIcon,BookIcon,BarChartIcon,ExamIcon,ForumIcon,SettingsIcon} from "@/components/icons"
 
 export default function Component() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -160,8 +163,93 @@ export default function Component() {
     }
   };
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-8">
-      <h1 className="text-3xl font-bold mb-6">Previous Exam Papers</h1>
+    <div className="flex w-full flex-col">
+      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+          <TooltipProvider>
+            <Link
+              href="/dashboard"
+              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+              prefetch={false}
+            >
+              <BookIcon className="h-4 w-4 transition-all group-hover:scale-110" />
+              <span className="sr-only">College Dashboard</span>
+            </Link>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/papers"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <CheckIcon className="h-5 w-5" />
+                  <span className="sr-only">Exam Papers</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Exam Papers</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/exams"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <ExamIcon className="h-5 w-5 fill-white" />
+                  <span className="sr-only">Online Exams</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Online Exams</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/progress"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <BarChartIcon className="h-5 w-5" />
+                  <span className="sr-only">Progress Tracker</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Progress Tracker</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/threads"
+                  className="flex h-9 w-9 bg-accent items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <ForumIcon className="h-5 w-5 " />
+                  <span className="sr-only">Community</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Community</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </nav>
+        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="#"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <SettingsIcon className="h-5 w-5" />
+                  <span className="sr-only">Settings</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Settings</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </nav>
+      </aside>
+      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+        <main className=" gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+        <h1 className="text-3xl font-bold mb-6">Previous Exam Papers</h1>
       <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
         <div className="flex-1">
           <Input
@@ -237,6 +325,9 @@ export default function Component() {
           </div>
         ))}
       </div>
+        </main>
+      </div>
+      
     </div>
   );
 }

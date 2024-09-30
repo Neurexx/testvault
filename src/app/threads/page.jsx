@@ -5,7 +5,9 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { useEffect, useState } from "react"
-
+import {  CheckIcon,BookIcon,BarChartIcon,ExamIcon,ForumIcon,SettingsIcon} from "@/components/icons"
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
+import { Button } from "@/components/ui/button"
 
 export default function ThreadsPage() {
   const [threads, setThreads] = useState([]);
@@ -51,66 +53,152 @@ export default function ThreadsPage() {
   }, [search, sortBy, threads]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      
+    <div className="flex flex-col w-full">
+      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+          <TooltipProvider>
+            <Link
+              href="/dashboard"
+              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+              prefetch={false}
+            >
+              <BookIcon className="h-4 w-4 transition-all group-hover:scale-110" />
+              <span className="sr-only">College Dashboard</span>
+            </Link>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/papers"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <CheckIcon className="h-5 w-5" />
+                  <span className="sr-only">Exam Papers</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Exam Papers</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/exams"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <ExamIcon className="h-5 w-5 fill-white" />
+                  <span className="sr-only">Online Exams</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Online Exams</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/progress"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <BarChartIcon className="h-5 w-5" />
+                  <span className="sr-only">Progress Tracker</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Progress Tracker</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/threads"
+                  className="flex h-9 w-9 bg-accent items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <ForumIcon className="h-5 w-5 " />
+                  <span className="sr-only">Community</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Community</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </nav>
+        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="#"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <SettingsIcon className="h-5 w-5" />
+                  <span className="sr-only">Settings</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Settings</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </nav>
+      </aside>
+      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
       <main className="flex-1 py-8 px-4 md:px-8">
       
-        <div className="container mx-auto">
-        
-          <div className="flex items-center justify-between mb-6">
-          <Link
-            href="/threads/create"
-            className="inline-flex items-center gap-2  bg-primary rounded-full w-8  px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          >
-            <PlusIcon className="h-4 w-4" />
-            Create New Thread
-          </Link>
-            <div className="flex items-center gap-4">
-              <Input
-                type="text"
-                placeholder="Search threads..."
-                className="max-w-xs"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="latest">Latest</SelectItem>
-                  <SelectItem value="oldest">Oldest</SelectItem>
-                  <SelectItem value="most-replies">Most Replies</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="grid gap-4 mt-4">
-            {filteredThreads.map((thread) => (
-              <Card key={thread._id}>
-                <CardHeader>
-                  <CardTitle>
-                    <Link href={`/threads/${thread._id}`} className="font-medium hover:underline">
-                      {thread.title}
-                    </Link>
-                  </CardTitle>
-                  <CardDescription>{thread.content}</CardDescription>
-                </CardHeader>
-                <CardFooter className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <MessageCircleIcon className="h-4 w-4" />
-                    <span>{thread.postCount || 0} replies</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <span>@{thread.author.name}</span>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
+      <div className="container mx-auto">
+      
+        <div className="flex items-center justify-between mb-6">
+        <Link
+          href="/threads/create"
+          className="m-8"
+        >
+          <Button className="rounded-full text-justify"><PlusIcon className="h-4 w-4" />
+          Create New Thread</Button>
+          
+        </Link>
+          <div className="flex items-center gap-4">
+            <Input
+              type="text"
+              placeholder="Search threads..."
+              className="max-w-xs"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger>
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="latest">Latest</SelectItem>
+                <SelectItem value="oldest">Oldest</SelectItem>
+                <SelectItem value="most-replies">Most Replies</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
-      </main>
+
+        <div className="grid gap-4 mt-4">
+          {filteredThreads.map((thread) => (
+            <Card key={thread._id}>
+              <CardHeader>
+                <CardTitle>
+                  <Link href={`/threads/${thread._id}`} className="font-medium hover:underline">
+                    {thread.title}
+                  </Link>
+                </CardTitle>
+                <CardDescription>{thread.content}</CardDescription>
+              </CardHeader>
+              <CardFooter className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <MessageCircleIcon className="h-4 w-4" />
+                  <span>{thread.postCount || 0} replies</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <span>@{thread.author.name}</span>
+                </div>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </main>
+      </div>
+      
 
       {/* <footer className="bg-muted text-muted-foreground py-4 px-6 fixed bottom-0 left-0 right-0">
         <div className="container mx-auto flex justify-center p-4">
@@ -127,24 +215,7 @@ export default function ThreadsPage() {
   );
 }
 
-function BookIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-    </svg>
-  )
-}
+
 
 
 function MessageCircleIcon(props) {

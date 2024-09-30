@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartTooltip, ChartTooltipContent,ChartConfig,ChartContainer } from "@/components/ui/chart";
+import { ChartTooltip, ChartTooltipContent,ChartConfig,ChartContainer, ChartLegend } from "@/components/ui/chart";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 
@@ -45,13 +45,14 @@ export default function StudentProgressChart() {
   return (
     
     <>
-    <main className="flex flex-col p-4 gap-2">
+    <main className="flex flex-col p-8 gap-2">
     <Card className="">
     <CardHeader>
       <CardTitle>Student Progress Over Time</CardTitle>
     </CardHeader>
-    <CardContent>
-      <ChartContainer config={chartConfig} className="h-full">
+    <CardContent className="">
+      <ChartContainer config={chartConfig} className="">
+        
       <LineChart
           accessibilityLayer
           data={progressData}
@@ -60,6 +61,8 @@ export default function StudentProgressChart() {
             right: 12,
           }}
         >
+                    <ChartLegend className=""/>
+
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="date"
@@ -68,10 +71,10 @@ export default function StudentProgressChart() {
             tickMargin={8}
             tickFormatter={(value) => value}
           />
-          <ChartTooltip
-            cursor={false}
+          {/* <ChartTooltip
+            cursor={true}
             content={<ChartTooltipContent hideLabel />}
-          />
+          /> */}
           <Line
             dataKey="averageScore"
             type="linear"
@@ -86,11 +89,12 @@ export default function StudentProgressChart() {
             strokeWidth={2}
             dot={false}
           />
+          <YAxis/>
         </LineChart>
       </ChartContainer>
     </CardContent>
   </Card>
-  <Card className="">
+  {/* <Card className="">
     <CardHeader>
       <CardTitle>Student Progress Over Time</CardTitle>
     </CardHeader>
@@ -133,7 +137,7 @@ export default function StudentProgressChart() {
         </LineChart>
       </ChartContainer>
     </CardContent>
-  </Card>
+  </Card> */}
   </main></>
   );
 }

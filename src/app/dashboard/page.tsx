@@ -262,7 +262,7 @@ export default function Component() {
                       <TableCell>{paper.paperName}</TableCell>
                       {/* <TableCell>{paper.paperCode}</TableCell> */}
                       <TableCell className="flex gap-2 items-center ">{paper.year} <span><Button>
-                          <a href={paper.url} className="font-extrabold" >↓</a>
+                          <a href={paper.url} className="font-extrabold" ><DownloadIcon className="w-4"/></a>
                         </Button></span></TableCell>
                       
                     </TableRow>
