@@ -232,7 +232,7 @@ export default function Component() {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+        <main className=" gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       <div className="flex flex-col gap-4 items-center justify-center">
         
         {/* Exam Papers Section */}
@@ -261,12 +261,10 @@ export default function Component() {
                       <TableCell>{paper.collegeName}</TableCell>
                       <TableCell>{paper.paperName}</TableCell>
                       {/* <TableCell>{paper.paperCode}</TableCell> */}
-                      <TableCell>{paper.year}</TableCell>
-                      <TableCell>
-                        <Button>
-                          <a href={paper.url} >Download</a>
-                        </Button>
-                      </TableCell>
+                      <TableCell className="flex gap-2 items-center ">{paper.year} <span><Button>
+                          <a href={paper.url} className="font-extrabold" >↓</a>
+                        </Button></span></TableCell>
+                      
                     </TableRow>
                   ))}
                 </TableBody>

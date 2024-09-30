@@ -133,59 +133,62 @@ export default function ExamComponent() {
     }
   };
 
-  useEffect(()=>{
+//   useEffect(()=>{
 
-    let interval;
+
+//     let interval;
     
-    async function loadModels() {
-      // Load models for face detection and landmark recognition
-      await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-      await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
-    }
+//     async function loadModels() {
+//       // Load models for face detection and landmark recognition
+//       await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+//       await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+//     }
 
-    async function setupProctoring() {
-      // Load the models
-      await loadModels();
+//     async function setupProctoring() {
+//       // Load the models
+//       await loadModels();
 
-      // Get webcam stream
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      setVideoStream(stream);
-      const videoElement = document.getElementById('webcam');
-      videoElement.srcObject = stream;
-      videoElement.play();
+//       // Get webcam stream
+//       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+//       setVideoStream(stream);
+//       const videoElement = document.getElementById('webcam');
+//       videoElement.srcObject = stream;
+//       videoElement.play();
 
-      // Continuously detect faces and landmarks
-     interval= setInterval(async () => {
-        const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
-        if (detections.length === 0) {
+//       // Continuously detect faces and landmarks
+//      interval= setInterval(async () => {
+//         const detections = await faceapi.detectAllFaces(videoElement, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
+//         if (detections.length === 0) {
           
-          router.replace("/exams")
-          }
+//           router.replace("/exams")
+//           }
           
 
         
-        else if(detections.length>1){
+//         else if(detections.length>1){
           
-          router.replace("/exams")
+//           router.replace("/exams")
         
-        } else {
-          const landmarks = detections[0].landmarks;
-          const leftEye = landmarks.getLeftEye();
-          const rightEye = landmarks.getRightEye();
+//         } else {
+//           const landmarks = detections[0].landmarks;
+//           const leftEye = landmarks.getLeftEye();
+//           const rightEye = landmarks.getRightEye();
 
-          // Analyze eye positions
-          detectEyeDirection(leftEye, rightEye);
-        }
-      }, 2000);
+//           // Analyze eye positions
+//           detectEyeDirection(leftEye, rightEye);
+//         }
+//       }, 2000);
 
       
-    }
+//     }
 
-    setupProctoring();
-return ()=>{
- clearInterval(interval)
-}
-  },[router])
+//     setupProctoring();
+// return ()=>{
+//  clearInterval(interval)
+// }
+//   },[router])
+
+
 
   // Handle answer selection
   const handleAnswerChange = (questionId, optionIndex) => {
@@ -237,8 +240,8 @@ return ()=>{
             ).padStart(2, "0")}`}</span>
           </div>
         </div>
-        <video id="webcam" width="600" height="400" className="fixed top-0 right-0"  />
-      <p>Eye Direction: {eyeDirection}</p>
+        {/* <video id="webcam" width="600" height="400" className="fixed top-0 right-0"  />
+      <p>Eye Direction: {eyeDirection}</p> */}
         <div className="flex items-center gap-4 text-muted-foreground">
           <span>{exam.questions.length} Questions</span>
           <div className="h-3 w-40 rounded-full bg-muted">
