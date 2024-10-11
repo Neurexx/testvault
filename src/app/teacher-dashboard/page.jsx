@@ -2,7 +2,7 @@
 
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import {Sheet,SheetTrigger,SheetContent} from "@/components/ui/sheet"
+// import {Sheet,SheetTrigger,SheetContent} from "@/components/ui/sheet"
 import { Button } from '@/components/ui/button';
 import { Tabs,TabsList,TabsTrigger,TabsContent } from '@/components/ui/tabs';
 import {Card,CardContent,CardHeader,CardTitle,CardDescription } from '@/components/ui/card';
@@ -11,8 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 
 import { DropdownMenu,DropdownMenuContent,DropdownMenuTrigger,DropdownMenuLabel,DropdownMenuItem,DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
-import { cn } from "@/lib/utils"
-import { redirect, useRouter } from 'next/navigation';
+import {  useRouter } from 'next/navigation';
 
 export default function TeacherDashboard() {
   const { data: session,status } = useSession();
@@ -92,23 +91,14 @@ export default function TeacherDashboard() {
         </div> */}
         <DropdownMenu >
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full absolute right-4 top-3">
-              <img
-                src="/placeholder.svg"
-                width="36"
-                height="36"
-                className="rounded-full"
-                alt="Avatar"
-                style={{ aspectRatio: "36/36", objectFit: "cover" }}
-              />
+            <Button  size="icon" className="rounded-full text-gray-50 absolute right-4 top-3">
+              {session.user.name[0]}
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Signed in as John Doe</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Help</DropdownMenuItem>
+            
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
@@ -130,29 +120,29 @@ export default function TeacherDashboard() {
               </CardHeader>
               <CardContent>
                 <form className="space-y-4">
-                  <div>
-                    <Label htmlFor="file">File</Label>
-                    <div />
+                  <div className=''>
+                    <Input type='file' className="w-1/2"/>
+                    
                   </div>
                   <div>
-                    <Label htmlFor="tags">College Name</Label>
-                    <Input id="tags" placeholder="" />
+                    <Label htmlFor="collegeName">College Name</Label>
+                    <Input id="collegeName"  />
                   </div>
                   <div>
-                    <Label htmlFor="tags">Department</Label>
-                    <Input id="tags" placeholder="" />
+                    <Label htmlFor="department">Department</Label>
+                    <Input id="department"  />
                   </div>
                   <div>
-                    <Label htmlFor="tags">Paper Name</Label>
-                    <Input id="tags" placeholder="" />
+                    <Label htmlFor="paperName">Paper Name</Label>
+                    <Input id="paperName"  />
                   </div>
                   <div>
-                    <Label htmlFor="tags">Paper Code</Label>
-                    <Input id="tags" placeholder="" />
+                    <Label htmlFor="paperCode">Paper Code</Label>
+                    <Input id="paperCode"  />
                   </div>
                   <div>
-                    <Label htmlFor="tags">Year</Label>
-                    <Input id="tags" placeholder="" />
+                    <Label htmlFor="year">Year</Label>
+                    <Input id="year"  />
                   </div>
                   
                   <Button type="submit">Upload</Button>
