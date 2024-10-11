@@ -92,7 +92,7 @@ export default function TeacherDashboard() {
         <DropdownMenu >
           <DropdownMenuTrigger asChild>
             <Button  size="icon" className="rounded-full text-gray-50 absolute right-4 top-3">
-              {session.user.name[0]}
+              {session?.user?.name[0]}
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </DropdownMenuTrigger>
