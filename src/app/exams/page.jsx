@@ -8,10 +8,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { Card, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
+import { usePathname } from "next/navigation";
 export default function Component() {
     const [exams, setExams] = useState([]);
     const [loading, setLoading] = useState(true);
-  
+    const path=usePathname()
+     console.log(path)
     useEffect(() => {
       axios
         .get(`/api/exams`)
@@ -34,7 +36,7 @@ export default function Component() {
           <TooltipProvider>
             <Link
               href="/dashboard"
-              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg bg-accent font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
               prefetch={false}
             >
               <BookIcon className="h-4 w-4 transition-all group-hover:scale-110" />
@@ -57,7 +59,7 @@ export default function Component() {
               <TooltipTrigger asChild>
                 <Link
                   href="/exams"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  className={`flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground bg-primary transition-colors hover:text-foreground md:h-8 md:w-8`}
                   prefetch={false}
                 >
                   <ExamIcon className="h-5 w-5 fill-white" />

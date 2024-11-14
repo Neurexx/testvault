@@ -11,11 +11,15 @@ import axios from "axios";
 
 export default function ExamComponent() {
   const { examId } = useParams(); // Get the exam ID from the URL query
-  const [videoStream, setVideoStream] = useState(null);
-  const videoRef = useRef(null);
-  const [eyeDirection, setEyeDirection] = useState('Looking at Screen');
+  // const [videoStream, setVideoStream] = useState(null);
+  // const videoRef = useRef(null);
+  // const intervalRef = useRef(null);
+
+  // const [eyeDirection, setEyeDirection] = useState('Looking at Screen');
   const router = useRouter();
   const [isExamActive, setIsExamActive] = useState(true);
+  // const streamRef = useRef(null); // Store the stream reference
+
   const {data:session,status}=useSession()
   const [exam, setExam] = useState(null); // To store the exam data
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Track current question
@@ -108,30 +112,30 @@ export default function ExamComponent() {
   }, []);
 
   // Handle timer countdown
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [timeLeft]);
-  const detectEyeDirection = (leftEye, rightEye) => {
-    // Eye positions can be analyzed based on relative positions of the left and right eye points.
-    const eyeMidPoint = {
-      x: (leftEye[0].x + rightEye[3].x) / 2,
-      y: (leftEye[0].y + rightEye[3].y) / 2,
-    };
+  // useEffect(() => {
+  //   if (timeLeft > 0) {
+  //     const timer = setInterval(() => {
+  //       setTimeLeft((prev) => prev - 1);
+  //     }, 1000);
+  //     return () => clearInterval(timer);
+  //   }
+  // }, [timeLeft]);
+  // const detectEyeDirection = (leftEye, rightEye) => {
+  //   // Eye positions can be analyzed based on relative positions of the left and right eye points.
+  //   const eyeMidPoint = {
+  //     x: (leftEye[0].x + rightEye[3].x) / 2,
+  //     y: (leftEye[0].y + rightEye[3].y) / 2,
+  //   };
 
-    // Basic check to determine if the eyes are centered
-    if (eyeMidPoint.x > 150 && eyeMidPoint.x < 450) {
-      setEyeDirection('Looking at Screen');
+  //   // Basic check to determine if the eyes are centered
+  //   if (eyeMidPoint.x > 150 && eyeMidPoint.x < 450) {
+  //     setEyeDirection('Looking at Screen');
       
-    } else {
-      setEyeDirection('Looking Away');
-      router.replace("/exams")
-    }
-  };
+  //   } else {
+  //     setEyeDirection('Looking Away');
+  //     router.replace("/exams")
+  //   }
+  // };
 
 //   useEffect(()=>{
 
@@ -188,6 +192,32 @@ export default function ExamComponent() {
 // }
 //   },[router])
 
+// useEffect(() => {
+//   const startVideoStream = async () => {
+//     try {
+//       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+//       streamRef.current=stream
+//       if (videoRef.current) {
+//         videoRef.current.srcObject = stream;
+//       }
+//     } catch (error) {
+//       console.error('Error accessing webcam:', error);
+//     }
+//   };
+
+//   startVideoStream();
+
+  
+//   return () => {
+//     if (intervalRef.current) clearInterval(intervalRef.current);
+
+//     // Stop the video tracks to turn off the webcam
+//     if (streamRef.current) {
+//       streamRef.current.getTracks().forEach((track) => track.stop());
+//     }
+//   };
+// }, []);
+
 
 
   // Handle answer selection
@@ -240,7 +270,8 @@ export default function ExamComponent() {
             ).padStart(2, "0")}`}</span>
           </div>
         </div>
-        {/* <video id="webcam" width="600" height="400" className="fixed top-0 right-0"  />
+       {/* <video id="webcam" ref={videoRef} autoPlay width="600" height="400" className="fixed top-0 right-0"  />
+         
       <p>Eye Direction: {eyeDirection}</p> */}
         <div className="flex items-center gap-4 text-muted-foreground">
           <span>{exam.questions.length} Questions</span>

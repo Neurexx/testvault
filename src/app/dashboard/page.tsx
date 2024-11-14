@@ -223,11 +223,7 @@ export default function Component() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
+              
               <DropdownMenuItem onClick={()=>{signOut()}}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
