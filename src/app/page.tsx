@@ -62,7 +62,7 @@ export default function Component() {
                     online to boost your performance.
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                {/* <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Link
                     href="#"
                     className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
@@ -77,7 +77,7 @@ export default function Component() {
                   >
                     Learn More
                   </Link>
-                </div>
+                </div> */}
               </div>
               <img
                 src="https://images.prismic.io/prodigy-website/3b23b533-c408-4380-bce6-0820b89131e9_math-on-board.jpeg?auto=compress%2Cformat&rect=0%2C874%2C6048%2C2016&w=1920&h=640&fit=max"

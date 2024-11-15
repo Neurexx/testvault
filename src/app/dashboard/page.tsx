@@ -19,8 +19,12 @@ export default function Component() {
   const {data:session,status}=useSession()
  const a="adfd"
  const [exams,setExams]=useState()
+ const [submissions, setSubmissions] = useState([]);
  const [papers,setPapers]=useState()
 
+
+
+ 
  useEffect(()=>{
   async function fetchData() {
     try{
@@ -38,6 +42,20 @@ export default function Component() {
   fetchData()
   
  },[])
+
+ useEffect(() => {
+  const fetchSubmissions = async () => {
+    try {
+      //@ts-ignore
+      const response = await axios.post(`/api/submissions`,{userId:session?.user._id});
+      console.log(response)
+      setSubmissions(response.data);
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
+    } 
+  }
+   fetchSubmissions()
+},[session])
 
 
   const router=useRouter()
@@ -199,14 +217,16 @@ export default function Component() {
             </BreadcrumbList>
           </Breadcrumb>
           <div className="relative ml-auto flex-1 md:grow-0">
-            <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
+            <div className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" ></div>
+
+            {/* <Input
               type="search"
               placeholder="Search..."
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            /> */}
           </div>
-          <ThemeToggle/>
+          <div className=""><ThemeToggle /></div>
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
@@ -304,6 +324,75 @@ export default function Component() {
             </div>
           </CardContent>
         </Card>
+
+
+        <Card className="w-full">
+          <CardHeader className="pb-3">
+            <CardTitle>Your Submissions</CardTitle>
+            
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {submissions.map((submission) => (
+        //@ts-ignore
+        <Card key={submission._id} className="w-full">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl">{
+            //@ts-ignore
+            submission.exam.title}</CardTitle>
+            <CardDescription>
+              Submitted: {
+              //@ts-ignore
+              submission.submittedAt ? submission.submittedAt: "Not submitted"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Score</p>
+                  <p className="font-medium">
+                    {
+                    //@ts-ignore
+                    submission.score !== null 
+                      ?
+                      //@ts-ignore
+                      `${submission.score}/${submission.totalMarks}`
+                      : "Pending"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Time Spent</p>
+                  <p className="font-medium">
+                    {
+                    //@ts-ignore
+                    Math.floor(submission.timeSpent / 60)} minutes
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <div className="pl-4">
+               
+                  
+                </div>
+              </div>
+
+              <div className="mt-4 pt-4 border-t">
+                
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        
+
+
+
       </div>
     </main>
       
