@@ -316,7 +316,7 @@ export default function Component() {
               <h3 className="text-lg font-semibold mb-2">{paper.subject}</h3>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm text-muted-foreground">Year: {paper.year}</span>
-                <span className="text-sm text-muted-foreground">Difficulty: {paper.difficulty}</span>
+                {/* <span className="text-sm text-muted-foreground">Difficulty: {paper.difficulty}</span> */}
               </div>
               <Button variant="outline" size="sm" >
                 <a href={`https://testvault-bucket.s3.amazonaws.com/${paper.collegeName}/${paper.department}/${paper.paperCode}/${paper.paperCode}-${paper.year}.pdf`} download={`${paper.paperCode}-${paper.year}.pdf`}>View Exam Paper</a>
