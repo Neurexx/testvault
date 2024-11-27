@@ -92,8 +92,9 @@ export async function POST(req) {
     await newPaper.save();
     return NextResponse.json({presignedUrl}, { status: 201 });
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
-      { error: "Failed to upload paper" },
+      { error: `Failed to upload paper ${error}` },
       { status: 500 }
     );
   }
