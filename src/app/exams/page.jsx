@@ -15,16 +15,21 @@ export default function Component() {
     const path=usePathname()
      console.log(path)
     useEffect(() => {
-      axios
-        .get(`/api/exams`)
-        .then((response) => {
-          setExams(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching exams:", error);
-          setLoading(false);
-        });
+  
+     async function fetchExams() {
+      try{
+      const res= await fetch("/api/exams",{next:{tags:['exams']}})
+     const data=await res.json()
+     setExams(data)
+     setLoading(false);
+      }catch(e){
+       console.error(e)
+       setLoading(false);
+      }
+     }
+     fetchExams()
+
+    
     }, []);
   
     if (loading) return <div>Loading...</div>;

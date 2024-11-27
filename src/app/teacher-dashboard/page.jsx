@@ -9,20 +9,98 @@ import {Card,CardContent,CardHeader,CardTitle,CardDescription } from '@/componen
 import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-
+import axios from 'axios';
 import { DropdownMenu,DropdownMenuContent,DropdownMenuTrigger,DropdownMenuLabel,DropdownMenuItem,DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 import {  useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+
+
 
 export default function TeacherDashboard() {
   const { data: session,status } = useSession();
+  const [file, setFile] = useState(null);
+  const [collegeName, setCollegeName] = useState('');
+  const [department, setDepartment] = useState('');
+  const [paperName, setPaperName] = useState('');
+  const [paperCode, setPaperCode] = useState('');
+  const [year, setYear] = useState('');
   console.log(session)
   const router =useRouter()
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
+
+  const handleUploadPaper = async (e) => {
+    e.preventDefault();
+
+    // Validate file is selected
+    if (!file) {
+      alert('Please select a file to upload');
+      return;
+    }
+
+    try {
+      // Prepare form data to send to API
+      const formData = {
+        collegeName,
+        department,
+        paperName,
+        paperCode,
+        year
+      };
+      console.log(formData)
+
+      // Request presigned URL from API
+      const presignedUrlResponse = await axios.post('/api/papers', formData);
+      console.log(presignedUrlResponse)
+      const { presignedUrl } = presignedUrlResponse.data;
+
+      // Upload file to presigned URL
+      await axios.put(presignedUrl, file, {
+        headers: {
+          'Content-Type': file.type
+        }
+      });
+
+      // Optional: You might want to save the fileUrl to your database or do additional processing
+     // console.log('File uploaded successfully:', fileUrl);
+
+      // Reset form after successful upload
+      resetForm();
+
+      // Show success message
+      alert('Paper uploaded successfully!');
+
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Failed to upload paper. Please try again.');
+    }
+  };
+
+  // Reset form fields
+  const resetForm = () => {
+    setFile(null);
+    setCollegeName('');
+    setDepartment('');
+    setPaperName('');
+    setPaperCode('');
+    setYear('');
+    
+    // Reset file input
+    if (document.getElementById('file-input')) {
+      document.getElementById('file-input').value = '';
+    }
+  };
 
  async function handleSignOut(e) {
     await signOut()
     
  }
-
+ 
+ 
   if (!session || session.user.role !== 'teacher') {
     router.push("/login")
   }
@@ -119,33 +197,65 @@ export default function TeacherDashboard() {
                 <CardDescription>Add new practice papers to the platform.</CardDescription>
               </CardHeader>
               <CardContent>
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleUploadPaper}>
                   <div className=''>
-                    <Input type='file' className="w-1/2"/>
+                  <Label htmlFor="file-input">Upload PDF</Label>
+        <Input 
+          id="file-input"
+          type="file" 
+          accept=".pdf"
+          onChange={handleFileChange}
+          className="w-1/2" 
+        />
                     
                   </div>
                   <div>
-                    <Label htmlFor="collegeName">College Name</Label>
-                    <Input id="collegeName"  />
-                  </div>
-                  <div>
-                    <Label htmlFor="department">Department</Label>
-                    <Input id="department"  />
-                  </div>
-                  <div>
-                    <Label htmlFor="paperName">Paper Name</Label>
-                    <Input id="paperName"  />
-                  </div>
-                  <div>
-                    <Label htmlFor="paperCode">Paper Code</Label>
-                    <Input id="paperCode"  />
-                  </div>
-                  <div>
-                    <Label htmlFor="year">Year</Label>
-                    <Input id="year"  />
-                  </div>
+        <Label htmlFor="collegeName">College Name</Label>
+        <Input 
+          id="collegeName"
+          value={collegeName}
+          onChange={(e) => setCollegeName(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="department">Department</Label>
+        <Input 
+          id="department"
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="paperName">Paper Name</Label>
+        <Input 
+          id="paperName"
+          value={paperName}
+          onChange={(e) => setPaperName(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="paperCode">Paper Code</Label>
+        <Input 
+          id="paperCode"
+          value={paperCode}
+          onChange={(e) => setPaperCode(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="year">Year</Label>
+        <Input 
+          id="year"
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+          required
+        />
+      </div>
                   
-                  <Button type="submit">Upload</Button>
+                  <Button type="submit" >Upload</Button>
                 </form>
               </CardContent>
             </Card>

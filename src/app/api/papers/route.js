@@ -2,6 +2,26 @@ import dbConnect from "@/lib/dbConnect";
 import Paper from "@/models/paperModel.ts";
 import { NextResponse, NextRequest } from "next/server";
 import {S3Client, PutObjectCommand} from "@aws-sdk/client-s3"
+import {getSignedUrl} from "@aws-sdk/s3-request-presigner"
+
+const client=new S3Client({
+  region:"us-east-1",
+  credentials:{
+    accessKeyId:process.env.S3_ACCESS_KEY,
+  secretAccessKey:process.env.S3_SECRET_KEY
+}
+})
+
+async function getObjectUrl(key){
+  const command=new PutObjectCommand({
+    Bucket:"testvault-bucket",
+    Key:key,
+    ContentType:"application/pdf"
+  })
+  const url= await getSignedUrl(client,command,{expiresIn:300})
+  return url
+}
+
 
 export async function GET(req) {
   await dbConnect();
@@ -41,15 +61,14 @@ export async function POST(req) {
   await dbConnect();
 
   const body = await req.json();
-  const { collegeName, paperName, department, paperCode, year, url } = body;
+  const { collegeName, paperName, department, paperCode, year} = body;
 
   if (
     !collegeName ||
     !department ||
     !paperCode ||
     !paperName ||
-    !year ||
-    !url
+    !year 
   ) {
     return NextResponse.json(
       { error: "Missing required fields" },
@@ -57,6 +76,10 @@ export async function POST(req) {
     );
   }
 
+  try{
+  const presignedUrl=await getObjectUrl(`${collegeName}/${department}/${paperCode}/${paperCode}-${year}.pdf`)
+  
+  const url=`https://testvault-bucket.s3.amazonaws.com/${collegeName}/${department}/${paperCode}/${paperCode}-${year}.pdf`
   const newPaper = new Paper({
     collegeName,
     paperName,
@@ -65,10 +88,9 @@ export async function POST(req) {
     year,
     url,
   });
-
-  try {
+  
     await newPaper.save();
-    return NextResponse.json(newPaper, { status: 201 });
+    return NextResponse.json({presignedUrl}, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to upload paper" },

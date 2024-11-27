@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect"
 import { NextResponse } from "next/server"
 import Question from "@/models/questionModel";
 import Exam from "@/models/examModel"
+import { revalidateTag } from "next/cache";
 
 
 export async function POST(req) {
@@ -25,6 +26,12 @@ export async function POST(req) {
       });
 
       await newExam.save();
+
+      revalidateTag('exams')
+
+
+
+
       return NextResponse.json(newExam,{status:201});
     } catch (error) {
         console.log(error)

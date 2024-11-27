@@ -28,8 +28,9 @@ export default function Component() {
  useEffect(()=>{
   async function fetchData() {
     try{
-      const res=await axios.get("/api/exams")
-      setExams(res.data)
+      const res= await fetch("/api/exams",{next:{tags:['exams']}})
+     const data=await res.json()
+      setExams(data)
       const res2=await axios.get("/api/papers")
       setPapers(res2.data)
     }
