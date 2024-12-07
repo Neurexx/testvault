@@ -62,7 +62,9 @@ export default function TeacherDashboard() {
       // Upload file to presigned URL
       await axios.put(presignedUrl, file, {
         headers: {
-          'Content-Type': file.type
+          'Content-Type': file.type,
+          "Content-Disposition":"attachment"
+          
         }
       });
 
