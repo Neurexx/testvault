@@ -3,7 +3,7 @@
 import axios from "axios";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import Link from "next/link";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect,useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -15,62 +15,118 @@ import {
 import { Button } from "@/components/ui/button";
 import {  CheckIcon,BookIcon,BarChartIcon,ExamIcon,ForumIcon,SettingsIcon} from "@/components/icons"
 
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+
 export default function Component() {
+
+  const [searchParams, setSearchParams] = useState({
+    searchTerm: '',
+    subject: 'All Subjects',
+    year: 'All Years',
+    sortBy: 'Default'
+  });
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-  const [sortBy, setSortBy] = useState("");
+  
   const [examPapers, setExamPapers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filteredPapers, setFilteredPapers] = useState([]);
+  const [error, setError] = useState(null);
+//  const [filteredPapers, setFilteredPapers] = useState([]);
 
-  useEffect(() => {
-    const fetchExamPapers = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`/api/papers`, {
-          params: {
-            paperName: searchTerm,
+  const debouncedSearchTerm = useDebounce(searchParams.searchTerm, 500);
+
+  // useEffect(() => {
+  //   const fetchExamPapers = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axios.get(`/api/papers`, {
+  //         params: {
+  //           paperName: searchTerm,
             
             
             
-          },
-        });
-        setExamPapers(response.data);
-        console.log(examPapers)
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching papers:", error);
-        setError("Failed to fetch exam papers");
+  //         },
+  //       });
+  //       setExamPapers(response.data);
+  //       console.log(examPapers)
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching papers:", error);
+  //       setError("Failed to fetch exam papers");
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchExamPapers();
+  // }, [ searchTerm]);
+
+
+  const fetchExamPapers = useCallback(async () => {
+    const source = axios.CancelToken.source();
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await axios.get('/api/papers', {
+        params: {
+          paperName: debouncedSearchTerm,
+          // Other optional params if needed
+        },
+        cancelToken: source.token
+      });
+
+      setExamPapers(response.data);
+      setLoading(false);
+    } catch (err) {
+      if (axios.isCancel(err)) {
+        console.log('Request canceled');
+      } else {
+        setError('Failed to fetch exam papers');
         setLoading(false);
       }
-    };
+    }
 
-    fetchExamPapers();
-  }, [ searchTerm]);
+    return () => source.cancel();
+  }, [debouncedSearchTerm]);
 
-  useEffect(() => {
-    let result = examPapers;
+
+  // useEffect(() => {
+  //   let result = examPapers;
   
-    // Subject filtering
-    if (selectedSubject && selectedSubject !== "All Subjects") {
-      result = result.filter((paper) => paper.subject === selectedSubject);
-    }
+  //   // Subject filtering
+  //   if (selectedSubject && selectedSubject !== "All Subjects") {
+  //     result = result.filter((paper) => paper.subject === selectedSubject);
+  //   }
   
-    // Year filtering
-    if (selectedYear && selectedYear !== "All Years") {
-      result = result.filter((paper) => paper.year === Number(selectedYear));
-    }
+  //   // Year filtering
+  //   if (selectedYear && selectedYear !== "All Years") {
+  //     result = result.filter((paper) => paper.year === Number(selectedYear));
+  //   }
   
-    // Sorting
-    if (sortBy === "subject") {
-      result = result.sort((a, b) => a.subject.localeCompare(b.subject));
-    } else if (sortBy === "year") {
-      result = result.sort((a, b) => a.year - b.year);
-    }
+  //   // Sorting
+  //   if (sortBy === "subject") {
+  //     result = result.sort((a, b) => a.subject.localeCompare(b.subject));
+  //   } else if (sortBy === "year") {
+  //     result = result.sort((a, b) => a.year - b.year);
+  //   }
   
-    setFilteredPapers(result);
-  }, [examPapers, selectedSubject, selectedYear, sortBy]);
+  //   setFilteredPapers(result);
+  // }, [examPapers, selectedSubject, selectedYear, sortBy]);
 
   
 
@@ -90,9 +146,78 @@ export default function Component() {
       
   // }, [searchTerm, selectedSubject, selectedYear, sortBy]);
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const filteredPapers = useMemo(() => {
+    let result = [...examPapers];
+
+    // Subject filtering
+    if (searchParams.subject !== 'All Subjects') {
+      result = result.filter(paper => paper.subject === searchParams.subject);
+    }
+
+    // Year filtering
+    if (searchParams.year !== 'All Years') {
+      result = result.filter(paper => paper.year === Number(searchParams.year));
+    }
+
+    // Sorting
+    switch (searchParams.sortBy) {
+      case 'subject':
+        result.sort((a, b) => a.subject.localeCompare(b.subject));
+        break;
+      case 'year':
+        result.sort((a, b) => a.year - b.year);
+        break;
+    }
+
+    return result;
+  }, [examPapers, searchParams.subject, searchParams.year, searchParams.sortBy]);
+
+  // Trigger fetch on debounced search term changes
+  useEffect(() => {
+    if (debouncedSearchTerm || debouncedSearchTerm === '') {
+      fetchExamPapers();
+    }
+  }, [debouncedSearchTerm, fetchExamPapers]);
+
+  // Unified state update method
+  const handleParamChange = useCallback((key, value) => {
+    setSearchParams(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  }, []);
+
+  // Render methods
+  const renderPaperCard = (paper) => (
+    <div
+      key={paper._id}
+      className="bg-background rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+    >
+      <img
+        src={paper.previewImage}
+        alt={paper.paperName}
+        className="w-full h-48 object-cover"
+        style={{ aspectRatio: "300/200", objectFit: "cover" }}
+      />
+      <div className="p-4">
+        <h3 className="text-lg font-semibold mb-2">{paper.subject}</h3>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-sm text-muted-foreground">Year: {paper.year}</span>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => handleViewClick(`${paper.collegeName}/${paper.department}/${paper.paperCode}/${paper.paperCode}-${paper.year}.pdf`)}
+        >
+          View Exam Paper
+        </Button>
+      </div>
+    </div>
+  );
+
+  // const handleSearch = (e) => {
+  //   setSearchTerm(e.target.value);
+  // };
 
 
 
@@ -236,13 +361,13 @@ export default function Component() {
           <Input
             type="search"
             placeholder="Search by subject..."
-            value={searchTerm}
-            onChange={handleSearch}
+            value={searchParams.searchTerm}
+            onChange={(e) => handleParamChange('searchTerm', e.target.value)}
             className="w-full"
           />
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+          <Select value={searchParams.subject} onValueChange={(value) => handleParamChange('subject', value)}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="Select subject" />
             </SelectTrigger>
@@ -255,7 +380,7 @@ export default function Component() {
               <SelectItem value="English">English</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={selectedYear} onValueChange={setSelectedYear}>
+          <Select value={searchParams.year} onValueChange={(value) => handleParamChange('year', value)}>
             <SelectTrigger className="w-32">
               <SelectValue placeholder="Select year" />
             </SelectTrigger>
@@ -268,7 +393,7 @@ export default function Component() {
             </SelectContent>
           </Select>
           
-          <Select value={sortBy} onValueChange={setSortBy}>
+          <Select value={searchParams.sortBy} onValueChange={(value) => handleParamChange('sortBy', value)}>
             <SelectTrigger className="w-32">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
@@ -282,29 +407,7 @@ export default function Component() {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredPapers.map((paper) => (
-          <div
-            key={paper._id}
-            className="bg-background rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
-          >
-            <img
-              src={paper.previewImage}
-              alt={`${paper.paperName}`}
-              className="w-full h-48 object-cover"
-              style={{ aspectRatio: "300/200", objectFit: "cover" }}
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{paper.subject}</h3>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm text-muted-foreground">Year: {paper.year}</span>
-                
-              </div>
-              <Button variant="outline" size="sm" onClick={()=>handleViewClick(`${paper.collegeName}/${paper.department}/${paper.paperCode}/${paper.paperCode}-${paper.year}.pdf`)}>View Exam Paper
-                {/* <a href={`https://testvault-bucket.s3.amazonaws.com/${paper.collegeName}/${paper.department}/${paper.paperCode}/${paper.paperCode}-${paper.year}.pdf`} download={`${paper.paperCode}-${paper.year}.pdf`}>View Exam Paper</a> */}
-              </Button>
-            </div>
-          </div>
-        ))}
+      {!loading && filteredPapers.map(renderPaperCard)}
       </div>
         </main>
       </div>
