@@ -16,7 +16,8 @@ async function getObjectUrl(key){
   const command=new PutObjectCommand({
     Bucket:"testvault-bucket",
     Key:key,
-    ContentType:"application/pdf"
+    ContentType:"application/pdf",
+    ContentDisposition:"attachment"
   })
   const url= await getSignedUrl(client,command,{expiresIn:300})
   return url

@@ -19,10 +19,10 @@ export default function Component() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [selectedDifficulty, setSelectedDifficulty] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [examPapers, setExamPapers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filteredPapers, setFilteredPapers] = useState([]);
 
   useEffect(() => {
     const fetchExamPapers = async () => {
@@ -37,7 +37,7 @@ export default function Component() {
           },
         });
         setExamPapers(response.data);
-        console.log(response.data)
+        console.log(examPapers)
         setLoading(false);
       } catch (error) {
         console.error("Error fetching papers:", error);
@@ -47,96 +47,77 @@ export default function Component() {
     };
 
     fetchExamPapers();
-  }, [selectedSubject, selectedYear, selectedDifficulty, searchTerm]);
+  }, [ searchTerm]);
 
-  /*const examPapers = [
-    {
-      id: 1,
-      subject: "Data Structures",
-      year: 2022,
-      difficulty: "Intermediate",
-      previewImage:
-        "https://www.simplilearn.com/ice9/free_resources_article_thumb/Graph%20Data%20Structure%20-%20Soni/what-is-graphs-in-data-structure.png",
-    },
-    {
-      id: 2,
-      subject: "Physics",
-      year: 2021,
-      difficulty: "Advanced",
-      previewImage:
-        "https://t3.ftcdn.net/jpg/01/97/49/40/360_F_197494079_U9dM6IxEBzdUmrhe3DFxyi8L0aFGtQME.jpg",
-    },
-    {
-      id: 3,
-      subject: "Chemistry",
-      year: 2023,
-      difficulty: "Beginner",
-      previewImage:
-        "https://www.thoughtco.com/thmb/6MsMmUK27akFhb8i89kj95J5iko=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-545286316-433dd345105e4c6ebe4cdd8d2317fdaa.jpg",
-    },
-    {
-      id: 4,
-      subject: "Mathematics",
-      year: 2020,
-      difficulty: "Intermediate",
-      previewImage:
-        "https://www.euroschoolindia.com/wp-content/uploads/2023/10/what-is-vedic-mathss-for-kids-jpg.webp",
-    },
-    {
-      id: 5,
-      subject: "Digital Circuit Design",
-      year: 2022,
-      difficulty: "Advanced",
-      previewImage:
-        "https://www.watelectronics.com/wp-content/uploads/digital-circuit.png",
-    },
-    {
-      id: 6,
-      subject: "English",
-      year: 2021,
-      difficulty: "Beginner",
-      previewImage:
-        "https://neucodetalent.com/wp-content/uploads/2021/06/business-english.jpg",
-    },
-  ];*/
+  useEffect(() => {
+    let result = examPapers;
+  
+    // Subject filtering
+    if (selectedSubject && selectedSubject !== "All Subjects") {
+      result = result.filter((paper) => paper.subject === selectedSubject);
+    }
+  
+    // Year filtering
+    if (selectedYear && selectedYear !== "All Years") {
+      result = result.filter((paper) => paper.year === Number(selectedYear));
+    }
+  
+    // Sorting
+    if (sortBy === "subject") {
+      result = result.sort((a, b) => a.subject.localeCompare(b.subject));
+    } else if (sortBy === "year") {
+      result = result.sort((a, b) => a.year - b.year);
+    }
+  
+    setFilteredPapers(result);
+  }, [examPapers, selectedSubject, selectedYear, sortBy]);
 
-  const filteredExamPapers = useMemo(() => {
-    return examPapers
-      .filter((paper) => {
-       /* if (
-          searchTerm &&
-          !paper.subject.toLowerCase().includes(searchTerm.toLowerCase())
-        ) {
-          return false;
-        }*/
-        if (selectedSubject && selectedSubject !== "All Subjects" && paper.subject !== selectedSubject) {
-          return false;
-        }
-        if (selectedYear && selectedYear !== "All Years" && paper.year !== Number(selectedYear)) {
-          return false;
-        }
-        if (selectedDifficulty && selectedDifficulty !== "All Difficulties" && paper.difficulty !== selectedDifficulty) {
-          return false;
-        }
-        return true;
-      })
-      .sort((a, b) => {
-        switch (sortBy) {
-          case "subject":
-            return a.subject.localeCompare(b.subject);
-          case "year":
-            return a.year - b.year;
-          case "difficulty":
-            return a.difficulty.localeCompare(b.difficulty);
-          default:
-            return 0;
-        }
-      });
-  }, [searchTerm, selectedSubject, selectedYear, selectedDifficulty, sortBy]);
+  
+
+  // const filteredExamPapers = useMemo(() => {
+  //   return examPapers
+  //     .filter((paper) => {
+     
+  //       if (selectedSubject && selectedSubject !== "All Subjects" && paper.subject !== selectedSubject) {
+  //         return false;
+  //       }
+  //       if (selectedYear && selectedYear !== "All Years" && paper.year !== Number(selectedYear)) {
+  //         return false;
+  //       }
+        
+  //       return true;
+  //     })
+      
+  // }, [searchTerm, selectedSubject, selectedYear, sortBy]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
+
+
+
+
+  const handleViewClick = async (key) => {
+    try {
+        
+        
+
+        const response = await axios.post("/api/papers/url",{key})
+        console.log(response)
+        const {url}=response.data
+        console.log(url)
+        // Trigger download
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `paper.pdf`; // Suggest a filename
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        console.error(error);
+        alert("Failed to download the file. Please try again.");
+    }
+};
 
   const handleDownload = async () => {
     try {
@@ -301,7 +282,7 @@ export default function Component() {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredExamPapers.map((paper) => (
+        {filteredPapers.map((paper) => (
           <div
             key={paper._id}
             className="bg-background rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
@@ -316,10 +297,10 @@ export default function Component() {
               <h3 className="text-lg font-semibold mb-2">{paper.subject}</h3>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm text-muted-foreground">Year: {paper.year}</span>
-                {/* <span className="text-sm text-muted-foreground">Difficulty: {paper.difficulty}</span> */}
+                
               </div>
-              <Button variant="outline" size="sm" >
-                <a href={`https://testvault-bucket.s3.amazonaws.com/${paper.collegeName}/${paper.department}/${paper.paperCode}/${paper.paperCode}-${paper.year}.pdf`} download={`${paper.paperCode}-${paper.year}.pdf`}>View Exam Paper</a>
+              <Button variant="outline" size="sm" onClick={()=>handleViewClick(`${paper.collegeName}/${paper.department}/${paper.paperCode}/${paper.paperCode}-${paper.year}.pdf`)}>View Exam Paper
+                {/* <a href={`https://testvault-bucket.s3.amazonaws.com/${paper.collegeName}/${paper.department}/${paper.paperCode}/${paper.paperCode}-${paper.year}.pdf`} download={`${paper.paperCode}-${paper.year}.pdf`}>View Exam Paper</a> */}
               </Button>
             </div>
           </div>
