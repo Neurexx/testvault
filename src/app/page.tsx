@@ -43,8 +43,8 @@ export default function Component() {
           <Link href="/papers" className="text-sm   font-medium hover:underline underline-offset-4" prefetch={false}>
             Papers
           </Link>
-          <Link href="#" className="text-sm   font-medium hover:underline underline-offset-4" prefetch={false}>
-            Contact
+          <Link href="/smartq" className="text-sm   font-medium hover:underline underline-offset-4" prefetch={false}>
+            Make your own quiz with AI
           </Link>
         </nav>
       </header>
