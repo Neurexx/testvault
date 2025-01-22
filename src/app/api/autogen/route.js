@@ -40,7 +40,7 @@ export async function POST(req) {
     const MAX_FILE_SIZE = 15 * 1024 * 1024;
     if (pdfFile.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: "File size exceeds 10MB limit" },
+        { error: "File size exceeds 15MB limit" },
         { status: 400 }
       );
     }
