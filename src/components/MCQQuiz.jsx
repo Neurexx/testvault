@@ -141,7 +141,7 @@ const MCQQuiz = ({ questions }) => {
             <div className="text-center mt-4">
               <Button
                 onClick={calculateScore}
-                disabled={Object.keys(selectedAnswers).length !== questions.length}
+                
                 className="w-full"
               >
                 Submit Quiz

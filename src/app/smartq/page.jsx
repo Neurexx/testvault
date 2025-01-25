@@ -4,16 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import MCQQuiz from "@/components/MCQQuiz";
+import Spinner from "@/components/Spinner";
 
 function SmartQ() {
   const [pdf, setPdf] = useState(null);
   const [numberOfQuestions, setNumberOfQuestions] = useState(1);
   const [questions, setQuestions] = useState([]);
   const [error,setError]=useState(null);
-
+  const [loading,setLoading]= useState(false)
 
   async function handleSubmit(e) {
      e.preventDefault()
+     setLoading(true)
      setError(null)
     const formData = new FormData();
     formData.append("pdf", pdf);
@@ -32,9 +34,10 @@ function SmartQ() {
               setQuestions(data.questions);
             }
           } else {
+            setLoading(false)
             setError(data.error);}
     } catch (error) {
-
+        setLoading(false)
         setError(error)
     }
   }
@@ -44,7 +47,8 @@ function SmartQ() {
 
   return (
     <div className="p-2 flex flex-col gap-2">
-      <form onSubmit={handleSubmit}>
+      
+      <form onSubmit={handleSubmit} className="gap-4 flex flex-col">
         <div className="flex gap-2">
           <label>PDF</label>
           <input type="file" onChange={(e) => setPdf(e.target.files[0])} />
@@ -61,6 +65,7 @@ function SmartQ() {
         {error && <div style={{
 color:"red"
         }} >{error}</div>}
+        {loading && <Spinner/>}
       </form>
     </div>
   );

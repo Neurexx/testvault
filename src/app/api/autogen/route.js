@@ -29,7 +29,6 @@ export async function POST(req) {
     const formData = await req.formData();
 
     const pdfFile = formData.get("pdf");
-    console.log(pdfFile)
     if (!pdfFile || !pdfFile.size) {
       return NextResponse.json(
         { error: "No PDF file provided" },
