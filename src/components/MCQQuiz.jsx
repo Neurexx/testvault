@@ -104,7 +104,7 @@ const MCQQuiz = ({ questions }) => {
           <RadioGroup
             value={selectedAnswers[currentQuestion] || ''}
             onValueChange={handleAnswerSelection}
-            className="space-y-3"
+            className="space-y-3 p-4"
           >
             {currentQ.options.map((option, index) => (
               <div key={index} className="flex items-center space-x-2">
