@@ -32,6 +32,7 @@ function SmartQ() {
               setError(data.error);
             }else{
               setQuestions(data.questions);
+              setLoading(false)
             }
           } else {
             setLoading(false)
@@ -48,7 +49,7 @@ function SmartQ() {
   return (
     <div className="p-2 flex flex-col gap-2">
       
-      <form onSubmit={handleSubmit} className="gap-4 flex flex-col">
+      <form onSubmit={handleSubmit} className="gap-4 flex items-center flex-col">
         <div className="flex gap-2">
           <label>PDF</label>
           <input type="file" onChange={(e) => setPdf(e.target.files[0])} />
@@ -61,7 +62,7 @@ function SmartQ() {
             onChange={(e) => setNumberOfQuestions(e.target.value)}
           />
         </div>
-        <Button type="submit"  >Submit</Button>
+        <div className="text-center mt-4"><Button type="submit"  className="w-12" >Submit</Button></div> 
         {error && <div style={{
 color:"red"
         }} >{error}</div>}

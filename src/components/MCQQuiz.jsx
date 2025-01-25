@@ -142,7 +142,7 @@ const MCQQuiz = ({ questions }) => {
               <Button
                 onClick={calculateScore}
                 
-                className="w-full"
+                className="w-12"
               >
                 Submit Quiz
               </Button>
