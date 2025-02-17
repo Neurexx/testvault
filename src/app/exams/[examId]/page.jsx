@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {useSession} from "next-auth/react"
 import { useEffect, useState,useRef } from "react";
+import Spinner from "@/components/Spinner"
 import { useParams, useRouter } from "next/navigation";
 import * as faceapi from 'face-api.js';
 // Assuming these are custom components
@@ -255,7 +256,7 @@ export default function ExamComponent() {
       });
   };
 
-  if (!exam) return <div>Loading...</div>;
+  if (!exam)  return <div className="flex w-screen h-screen items-center justify-center"><Spinner size="w-16 h-16"/></div>;;
 
   const currentQuestion = exam.questions[currentQuestionIndex];
 

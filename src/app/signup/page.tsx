@@ -1,4 +1,5 @@
 "use client"
+import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,12 +13,15 @@ export default function Signup() {
 
   const [userData,setUserData]=useState({})
   const [error,setError]=useState("")
+  const [loading,setLoading]=useState(false)
+
   const router=useRouter()
 
   async function handleSubmit(e:FormEvent){
     
     try {
       e.preventDefault()
+      setLoading(true)
       const res=await axios.post("/api/signup",userData)
 
       console.log(res)
@@ -40,13 +44,16 @@ export default function Signup() {
         setError("User with this email already exists")
       
     }
+    finally{
+      setLoading(false)
+    }
   }
     return (<>
       <header className="p-4">
         <Link href="/">Home</Link>
       </header>
       <main className="flex-1 flex items-center justify-center px-4 py-12">
-      <div className=" rounded-lg p-8 shadow">
+      <div className="border-t-4 rounded-tl-sm border-l-2 border-gray-400 rounded-lg p-8 shadow">
             <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
@@ -64,6 +71,8 @@ export default function Signup() {
               <Button type="submit" className="w-full">
                 Sign Up
               </Button>
+              {loading && <Spinner/>}
+
               {error.length>0 && <div className="">{error}</div>}
             </form>
           </div>

@@ -1,22 +1,28 @@
 // This is the root layout component for your Next.js app.
 // Learn more: https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts#root-layout-required
-import { Manrope } from "next/font/google";
+import { Manrope, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import QueryProvider from "@/context/QueryClientProvider";
 
-const fontHeading = Manrope({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-heading",
-});
+const fontBody=Inter({subsets: ["latin"],variable:"--font-body"})
+const fontHeading=Inter({subsets: ["latin"],variable:"--font-heading"})
 
-const fontBody = Manrope({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-body",
-});
+
+// const fontHeading = Inter({
+//   subsets: ["latin"],
+//   display: "swap",
+//   variable: "--font-heading",
+// });
+
+// const fontBody = Inter({
+//   subsets: ["latin"],
+//   display: "swap",
+//   variable: "--font-body",
+// });
+
 //@ts-ignore
 export default function Layout({ children }) {
   return (
@@ -28,7 +34,9 @@ export default function Layout({ children }) {
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <QueryProvider>{children}</QueryProvider>
+            </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

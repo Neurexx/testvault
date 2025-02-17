@@ -1,4 +1,5 @@
 "use client"
+import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,12 +13,13 @@ export default function Signup() {
 
   const [userData,setUserData]=useState({})
   const [error,setError]=useState("")
+  const [loading,setLoading]=useState(false)
   const router=useRouter()
   const {data:session, status}=useSession()
 
   
   useEffect(() => {
-    if (status === 'loading') return; // Wait until session status is known
+    if (status === 'loading') return;
     if (session?.user) {
       //@ts-ignore
       if(session?.user.role==="student"){
@@ -31,6 +33,8 @@ export default function Signup() {
     
     
       e.preventDefault()
+      setLoading(true)
+
       const result = await signIn('credentials', {
         redirect: false,
         //@ts-ignore
@@ -39,28 +43,17 @@ export default function Signup() {
         password: userData.password,
       });
   
-      if (result?.error) {
-        if (result.error === 'CredentialsSignin') {
-          console.log({
-            title: 'Login Failed',
-            description: 'Incorrect username or password',
-            variant: 'destructive',
-          });
-        } else {
-          console.log({
-            title: 'Error',
-            description: result.error,
-            variant: 'destructive',
-          });
-        }
 
-      }
-     console.log(result)
+     
       if (result?.error) {
         //@ts-ignore
         setError(result.error)
 
-      }}
+      }
+
+      setLoading(false)
+    
+    }
     
   
     return (<>
@@ -68,7 +61,7 @@ export default function Signup() {
         <Link href="/">Home</Link>
       </header>
       <main className="flex-1 flex items-center justify-center px-4 py-12">
-      <div className=" rounded-lg p-8 shadow">
+      <div className=" rounded-lg p-8 shadow border-t-4 rounded-tl-sm border-l-2 border-gray-400">
             <h2 className="text-2xl font-bold mb-4">Login</h2>
             <form className="space-y-4" onSubmit={handleSubmit}>
               
@@ -83,6 +76,7 @@ export default function Signup() {
               <Button type="submit" className="w-full">
                 Login
               </Button>
+              {loading && <Spinner/>}
               {error.length>0 && <div className="">{error}</div>}
             </form>
           </div>

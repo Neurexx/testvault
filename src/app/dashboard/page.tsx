@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import axios from "axios"
 import ThemeToggle from "@/components/ThemeToggle"
+import Spinner from "@/components/Spinner"
 
 export default function Component() {
   const {data:session,status}=useSession()
@@ -68,7 +69,7 @@ export default function Component() {
   }, [session, status, router]);
 
   if (status === 'loading') {
-    return <p>Loading...</p>; // Optional loading state
+    return <div className="flex w-screen h-screen items-center justify-center"><Spinner size="w-16 h-16"/></div>;
   }
 
   if (!session?.user) {

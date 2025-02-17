@@ -22,8 +22,19 @@ export async function GET(req) {
     await dbConnect()
 
     try {
-        const threads = await ForumThread.find().populate('author');
-        return NextResponse.json(threads,{status:200});
+        
+        const query = new URLSearchParams(req.nextUrl.search);
+      const page = parseInt(query.get("page"));
+      const limit = 5; 
+      const skip = (page - 1) * limit;
+
+      const threads = await ForumThread.find()
+          .populate('author')
+          .skip(skip)
+          .limit(limit)
+          .sort({ createdAt: -1 });
+          
+          return NextResponse.json(threads,{status:200});
       } catch (error) {
         return NextResponse.json({ error: error.message },{status:400});
       }

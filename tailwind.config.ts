@@ -17,7 +17,14 @@ const config = {
         "2xl": "1400px",
       },
     },
+    fontFamily:{
+      inter:["Inter"],
+      roboto:["Roboto"],
+      raleway:["Raleway"],
+      quicksand:["Quicksand"],
+    },
     extend: {
+      
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

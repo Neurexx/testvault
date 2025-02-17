@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import ThemeToggle from "@/components/ThemeToggle"
+import Spinner from "@/components/Spinner"
 
 export default function Component() {
   const { data: session, status } = useSession();
@@ -21,7 +22,7 @@ export default function Component() {
   }, [session, status, router]);
 
   if (status === 'loading') {
-    return <p>Loading...</p>; // Optional loading state
+    return <div className="flex w-screen h-screen items-center justify-center"><Spinner size="w-16 h-16"/></div>; // Optional loading state
   }
 
   if (session?.user) {
@@ -29,15 +30,15 @@ export default function Component() {
   }
   
   return (
-    <div className="flex flex-col min-h-[100dvh]">
+    <div className="flex flex-col  min-h-[100dvh]">
       <header className="px-4 lg:px-6 h-14 flex items-center justify-center">
       
-        <nav className="ml-auto flex gap-4 sm:gap-6">
+        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
           <ThemeToggle/>
-          <Link href="/signup" className="text-sm  font-medium hover:underline underline-offset-4" prefetch={false}>
+          <Link href="/signup" className="text-sm  font-medium hover:underline underline-offset-4" prefetch={true}>
             Sign up
           </Link>
-          <Link href="/login" className="text-sm  font-medium hover:underline underline-offset-4" prefetch={false}>
+          <Link href="/login" className="text-sm  font-medium hover:underline underline-offset-4" prefetch={true} >
             Login
           </Link>
           <Link href="/papers" className="text-sm   font-medium hover:underline underline-offset-4" prefetch={false}>
@@ -48,14 +49,14 @@ export default function Component() {
           </Link>
         </nav>
       </header>
-      <main className="flex-1 justify-center items-center">
+      <main className="flex-1 font-quicksand justify-center items-center">
         <section className="w-full py-5 flex justify-center items-center">
           <div className=" px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Ace Your Exams with TestVault
+                    Ace Your Exams with <span className="bg-clip-text text-transparent bg-gradient-to-br from-[#ff1900] to-[#fcde21]">TestVault</span>
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
                     Unlock a world of exam success with TestVault. Access college exam papers and take practice tests
@@ -155,10 +156,10 @@ export default function Component() {
             </Avatar>
             <div>
               <p className="text-sm font-medium">John Doe</p>
-              <p className="text-sm text-muted-foreground">Computer Science Student</p>
+              <p className="text-sm text-muted-white">Computer Science Student</p>
             </div>
           </div>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4 text-white">
             &quot;TestVault has been a game-changer for me. The access to past exam papers and the online practice tests have significantly improved my exam performance.&quot;
           </p>
         </div>
@@ -170,10 +171,10 @@ export default function Component() {
             </Avatar>
             <div>
               <p className="text-sm font-medium">Sarah Anderson</p>
-              <p className="text-sm text-muted-foreground">Business Administration Student</p>
+              <p className="text-sm text-white">Business Administration Student</p>
             </div>
           </div>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4 text-white">
             &quot;I highly recommend TestVault to any student looking to improve their exam scores. The platform is user-friendly and the content is top-notch.&quot;
           </p>
         </div>
