@@ -52,6 +52,7 @@ const fetchThreads = async ({ pageParam = 1 }) => {
 
 export default function ThreadsPage() {
   const [threads, setThreads] = useState([]);
+  
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("latest");
   const [filteredThreads, setFilteredThreads] = useState([]);
