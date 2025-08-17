@@ -61,8 +61,13 @@ const {
     isLoading: submissionsLoading,
     isError: submissionsError,
   } = useQuery({
+    //@ts-ignore
     queryKey: ["submissions", session?.user?._id],
+        //@ts-ignore
+
     queryFn: () => fetchSubmissions(session?.user._id),
+        //@ts-ignore
+
     enabled: !!session?.user?._id, 
   });
 
@@ -262,7 +267,9 @@ const {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {submissions.map((submission) => (
+               {   //@ts-ignore
+
+            submissions.map((submission) => (
         //@ts-ignore
         <Card key={submission._id} className="w-full">
           <CardHeader className="pb-2">
