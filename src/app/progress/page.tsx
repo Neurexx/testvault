@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartTooltip, ChartTooltipContent,ChartConfig,ChartContainer, ChartLegend } from "@/components/ui/chart";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import Sidebar from "@/components/Sidebar";
 
 // Fetch progress data from API
 async function fetchStudentProgress(studentId:any) {
@@ -45,6 +46,7 @@ export default function StudentProgressChart() {
   return (
     
     <>
+    <Sidebar/>
     <main className="flex flex-col p-8 gap-2">
     <Card className="">
     <CardHeader>

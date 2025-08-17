@@ -15,50 +15,56 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import ThemeToggle from "@/components/ThemeToggle"
 import Spinner from "@/components/Spinner"
+import { useQuery } from "@tanstack/react-query"
+import Sidebar from "@/components/Sidebar"
+
+const fetchExams = async () => {
+  const res = await fetch("/api/exams", { next: { tags: ["exams"] } });
+  return res.json();
+};
+
+const fetchPapers = async () => {
+  const res = await axios.get("/api/papers");
+  return res.data;
+};
+
+const fetchSubmissions = async (userId: string) => {
+  const res = await axios.post(`/api/submissions`, { userId });
+  return res.data;
+};
 
 export default function Component() {
+
   const {data:session,status}=useSession()
- const a="adfd"
- const [exams,setExams]=useState()
- const [submissions, setSubmissions] = useState([]);
- const [papers,setPapers]=useState()
-
-
-
  
- useEffect(()=>{
-  async function fetchData() {
-    try{
-      const res= await fetch("/api/exams",{next:{tags:['exams']}})
-     const data=await res.json()
-      setExams(data)
-      const res2=await axios.get("/api/papers")
-      setPapers(res2.data)
-    }
-    catch(e){
-      console.log(e)
 
-    }
-  }
+const {
+    data: exams,
+    isLoading: examsLoading,
+    isError: examsError,
+  } = useQuery({
+    queryKey: ["exams"],
+    queryFn: fetchExams,
+  });
 
-  fetchData()
-  
- },[])
+  const {
+    data: papers,
+    isLoading: papersLoading,
+    isError: papersError,
+  } = useQuery({
+    queryKey: ["papers"],
+    queryFn: fetchPapers,
+  });
 
- useEffect(() => {
-  const fetchSubmissions = async () => {
-    try {
-      //@ts-ignore
-      const response = await axios.post(`/api/submissions`,{userId:session?.user._id});
-      console.log(response)
-      setSubmissions(response.data);
-    } catch (error) {
-      console.error('Error fetching submissions:', error);
-    } 
-  }
-   fetchSubmissions()
-},[session])
-
+  const {
+    data: submissions,
+    isLoading: submissionsLoading,
+    isError: submissionsError,
+  } = useQuery({
+    queryKey: ["submissions", session?.user?._id],
+    queryFn: () => fetchSubmissions(session?.user._id),
+    enabled: !!session?.user?._id, 
+  });
 
   const router=useRouter()
   useEffect(() => {
@@ -68,9 +74,12 @@ export default function Component() {
     }
   }, [session, status, router]);
 
-  if (status === 'loading') {
+  if (status === 'loading' || examsLoading || papersLoading || submissionsLoading) {
     return <div className="flex w-screen h-screen items-center justify-center"><Spinner size="w-16 h-16"/></div>;
+
   }
+
+  if (examsError || papersError || submissionsError) return <p>Error loading data</p>;
 
   if (!session?.user) {
     return null; // Prevent rendering before redirect
@@ -78,89 +87,7 @@ export default function Component() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-          <TooltipProvider>
-            <Link
-              href="#"
-              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-              prefetch={false}
-            >
-              <BookIcon className="h-4 w-4 transition-all group-hover:scale-110" />
-              <span className="sr-only">College Dashboard</span>
-            </Link>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/papers"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <CheckIcon className="h-5 w-5" />
-                  <span className="sr-only">Exam Papers</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Exam Papers</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/exams"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <ExamIcon className="h-5 w-5 fill-white" />
-                  <span className="sr-only">Online Exams</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Online Exams</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/progress"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <BarChartIcon className="h-5 w-5" />
-                  <span className="sr-only">Progress Tracker</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Progress Tracker</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/threads"
-                  className="flex h-9 w-9 bg-accent items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <ForumIcon className="h-5 w-5 " />
-                  <span className="sr-only">Community</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Community</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </nav>
-        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <SettingsIcon className="h-5 w-5" />
-                  <span className="sr-only">Settings</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Settings</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </nav>
-      </aside>
+      <Sidebar/>
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
